@@ -15,6 +15,7 @@ class Game:
 		self.selectNumberOfPlayers()
 		self.showGameSettings()
 		self.instantiatePlayers()
+		self.runGame()
 
 
 	def selectRouletteType(self):
@@ -47,6 +48,9 @@ class Game:
 			name = input(f"Player {player}, enter your name: ")
 			players.addPlayer(name)
 
+	def runGame(self):
+		for player in players.playersList:
+			player.makeBet()
 
 
 class Roulette:
@@ -66,10 +70,16 @@ class Player:
 		self.name = name
 		self.bank = 100
 
+	def makeBet(self):
+		#Escolhe quantidade
+		#Aqui tem que ter os tipos de apostas diferentes
+
+
 
 class AmericanRoulette(Roulette):
 	def __init__(self):
 		super().__init__()
+		self.board.insert(0,'00')
 
 
 class EuropeanRoulette(Roulette):
@@ -82,7 +92,7 @@ class FrenchRoulette(Roulette):
 
 players = Players()
 game = Game()
-for player in players.playersList:
-	print(player.name)
-	print(player.bank)
-	print('')
+# for player in players.playersList:
+# 	print(player.name)
+# 	print(player.bank)
+# 	print('')
