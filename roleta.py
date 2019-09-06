@@ -1,9 +1,6 @@
 #Nome dos players
 
 class Game:
-	"""
-	Software main class
-	"""
 	def __init__(self):
 		#Select roulette type
 		print("*****Welcome to Bash Cassino!*****\n\nLet's play a Roulette Game!\n")
@@ -22,6 +19,8 @@ class Game:
 		#Method for selecting roulette type
 		while self.selectedRoulette not in ['1','2','3']:
 			self.selectedRoulette = input('Select game style:\n\n1-American Roulette\n2-European Roueltte\n3-French Roulette\n')
+			print('')
+			print('')
 			if self.selectedRoulette == '1':
 				print(f'Ok! Loading the {self.rouletteDict[self.selectedRoulette]}\n')
 				roulette = AmericanRoulette()
@@ -38,15 +37,20 @@ class Game:
 		while self.numberOfPlayers not in (str(i) for i in range(1,11)):
 			self.numberOfPlayers = input('Enter the number of players in this game (1-10)\n')
 		self.numberOfPlayers = int(self.numberOfPlayers)
+		print('')
+		print('')
 
 	def showGameSettings(self):
 		print(f'Setting {self.rouletteDict[self.selectedRoulette]} game for {self.numberOfPlayers} player(s)!\n')
 
 	def instantiatePlayers(self):
-		global players
 		for player in range(1,self.numberOfPlayers + 1):
 			name = input(f"Player {player}, enter your name: ")
 			players.addPlayer(name)
+		print('')
+		print(f"Ok! Let's begin the {self.rouletteDict[self.selectedRoulette]}")
+		print('')
+		print('')
 
 	def runGame(self):
 		for player in players.playersList:
@@ -68,13 +72,20 @@ class Players:
 class Player:
 	def __init__(self,name):
 		self.name = name
-		self.bank = 100
+		self.pot = 100
+		self.bet = 0
 
 	def makeBet(self):
-		#Escolhe quantidade
+		validBet = False
+		while not validBet:
+			if self.pot > 0:
+				self.bet = int(input(f"Player: {self.name}\nPot: {self.pot}\nHow much you wanna bet?: "))
+				if self.bet > self.pot:
+					print(f"Not enough money!, You only have ${self.pot} left")
+				else:
+					self.pot -= self.bet
+					print(self.pot)
 		#Aqui tem que ter os tipos de apostas diferentes
-
-
 
 class AmericanRoulette(Roulette):
 	def __init__(self):
