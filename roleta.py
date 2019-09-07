@@ -99,8 +99,6 @@ class Game:
 			#Determinar se vencedor
 			#Distribuir dinheiro
 
-
-
 class Players:
 	def __init__(self):
 		self.playersList = []
