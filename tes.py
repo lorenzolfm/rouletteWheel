@@ -31,6 +31,18 @@
 # else:
 #     print('No!')
 
-print(list(range(1,37,3)))
-print(list(range(2,37,3)))
-print(list(range(3,37,3)))
+class Mae:
+    def __init__(self):
+        self.teste = 'oi'
+        # self.digaOi()
+        self.digaOi()
+    def oi(self):
+        print('Oi')
+        
+    def digaOi(self):
+        self.oi()
+class Filho(Mae):
+    def __init__(self):
+        super().__init__()
+
+filho = Filho()

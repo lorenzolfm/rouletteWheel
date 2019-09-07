@@ -96,69 +96,89 @@ class Player:
 
 class Roulette:
 	def __init__(self):
-		self.board = [i for i in range(0,37)]
+		self.board = []
 
-	def determineIfEven(self,id):
-		if id % 2 == 0:
+
+	def determineIfEven(self,number):
+		if number % 2 == 0:
 			return True
 		return False
 
-	def determineIfLessOrEqualThan18(self,id):
-		if id <= 18:
+	def determineIfLessOrEqualThan18(self,number):
+		if number <= 18:
 			return True
 		return False
 
-	def determineIfRed(self,id):
-		if id in [1,3,5,7,9,12,14,16,18,19,21,23,25,23,25,27,30,32,34,36]:
+	def determineIfRed(self,number):
+		if number in [1,3,5,7,9,12,14,16,18,19,21,23,25,23,25,27,30,32,34,36]:
 			return True
 		return False
 
-	def determineIfFirst12(self,id):
-		if 1<=id<=12:
+	def determineIfFirst12(self,number):
+		if 1<=number<=12:
 			return True
 		return False
 
-	def determineIfSecond12(self,id):
-		if 13<=id<=24:
+	def determineIfSecond12(self,number):
+		if 13<=number<=24:
 			return True
 		return False
 
-	def determineIfThird12(self,id):
-		if 25<=id<=36:
+	def determineIfThird12(self,number):
+		if 25<=number<=36:
 			return True
 		return False
 
-	def determineIfFirstColumn(self,id):
-		if id in range(1,37,3):
+	def determineIfFirstColumn(self,number):
+		if number in range(1,37,3):
 			return True
 		return False
 
-	def determineIfSecondColumn(self,id):
-		if id in range(2,37,3):
+	def determineIfSecondColumn(self,number):
+		if number in range(2,37,3):
 			return True
 		return False
 
-	def determineIfThirdColumn(self,id):
-		if id in range(3,37,3):
+	def determineIfThirdColumn(self,number):
+		if number in range(3,37,3):
 			return True
 		return False
 
-	# def buildRoulette(self):
-	# 	for i in range(1,37):
+	def createBoard(self):
+		for number in [i for i in range(0,37)]:
+			if number == 0:
+				self.board.append({'id':number})
+			else:
+				dict = {
+					'id': number,
+				    'even': self.determineIfEven(number),
+				    'red': self.determineIfRed(number),
+				    'lessOrEqual18': self.determineIfLessOrEqualThan18(number),
+				    'firstTwelve': self.determineIfFirst12(number),
+				    'secondTwelve': self.determineIfSecond12(number),
+				    'thirdTwelve': self.determineIfThird12(number),
+				    'firstColumn': self.determineIfFirstColumn(number),
+				    'secondColumn': self.determineIfSecondColumn(number),
+				    'thirdColumn': self.determineIfThirdColumn(number),
+				}
+				self.board.append(dict)
 
 
 class EuropeanRoulette(Roulette):
 	def __init__(self):
 		super().__init__()
+		self.createBoard()
 
 class FrenchRoulette(Roulette):
 	def __init__(self):
 		super().__init__()
+		self.createBoard()
 
 class AmericanRoulette(Roulette):
 	def __init__(self):
 		super().__init__()
-		self.board.insert(0,'00')
+		self.createBoard()
+		# self.board.insert(0,'00')
 
 players = Players()
 game = Game()
