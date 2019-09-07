@@ -58,9 +58,10 @@ class Game:
 		print('')
 
 	def runGame(self):
-		for player in players.playersList:
-			player.enterBetValue()
-			player.chooseBetType()
+		while True:
+			for player in players.playersList:
+				player.enterBetValue()
+			# player.chooseBetType()
 		print('***All bets were made***')
 		print('')
 
@@ -76,6 +77,7 @@ class Player:
 		self.name = name
 		self.pot = 100
 		self.bet = 0
+		self.roundSkipedStreak = 0
 
 	def enterBetValue(self):
 		while self.bet not in (str(i) for i in range(0,self.pot+1)):
@@ -88,11 +90,18 @@ class Player:
 		self.bet = int(self.bet)
 		if self.bet != 0:
 			self.pot -=  self.bet
-			print(f'Making a bet for {self.name}; Amount: ${self.bet}; You have ${self.pot} left')
-			print('')
+			if self.roundSkipedStreak != 0:
+				self.roundSkipedStreak = 0
+			print(f'Making a bet for {self.name}; Amount: ${self.bet}; You have ${self.pot} left\n')
+
 		else:
-			print(f'{self.name} has chosen to skip this round')
-			print('')
+			self.roundSkipedStreak += 1
+			if self.roundSkipedStreak >= 3:
+				players.playersList.remove(self)
+				print(f"***{self.name}, You're out! Skiped 3 rounds in a row!***\n")
+
+			else:
+				print(f'***{self.name} has chosen to skip this round***\n***Skips Left before removal: {3-self.roundSkipedStreak}***\n')
 
 class Roulette:
 	def __init__(self):
