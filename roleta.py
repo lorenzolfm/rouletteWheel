@@ -1,5 +1,3 @@
-#Nome dos players
-
 class Game:
 	def __init__(self):
 		#Select roulette type
@@ -7,7 +5,7 @@ class Game:
 		self.rouletteDict = {'1': 'American Roulette', '2': 'European Roulette', '3': 'French Roulette' }
 		self.selectedRoulette = None
 		self.numberOfPlayers = 0
-
+		#Faz sentido executar o jogo inteiro dentro do método construtor? Acho que nao
 		self.selectRouletteType()
 		self.selectNumberOfPlayers()
 		self.showGameSettings()
@@ -44,17 +42,27 @@ class Game:
 		print(f'Setting {self.rouletteDict[self.selectedRoulette]} game for {self.numberOfPlayers} player(s)!\n')
 
 	def instantiatePlayers(self):
-		for player in range(1,self.numberOfPlayers + 1):
-			name = input(f"Player {player}, enter your name: ")
-			players.addPlayer(name)
+		for playerNumber in range(1,self.numberOfPlayers + 1):
+			name = input(f"Player {playerNumber}, enter your name: ")
+			print('')
+			if self.numberOfPlayers > 1:
+				while name in [player.name for player in players.playersList]:
+					name = input('***Name already registered***\nPlease enter a different name: ')
+					print('')
+				else:
+					players.addPlayer(name)
+			else:
+				players.addPlayer(name)
 		print('')
-		print(f"Ok! Let's begin the {self.rouletteDict[self.selectedRoulette]}")
+		print(f"***Ok! Let's begin the {self.rouletteDict[self.selectedRoulette]}***")
 		print('')
 		print('')
 
 	def runGame(self):
+		# while True:
 		for player in players.playersList:
 			player.makeBet()
+		print('All bets were made')
 
 
 class Roulette:
@@ -76,16 +84,22 @@ class Player:
 		self.bet = 0
 
 	def makeBet(self):
-		validBet = False
-		while not validBet:
+		while self.bet not in (str(i) for i in range(0,self.pot+1)):
 			if self.pot > 0:
-				self.bet = int(input(f"Player: {self.name}\nPot: {self.pot}\nHow much you wanna bet?: "))
-				if self.bet > self.pot:
-					print(f"Not enough money!, You only have ${self.pot} left")
-				else:
-					self.pot -= self.bet
-					print(self.pot)
-		#Aqui tem que ter os tipos de apostas diferentes
+				self.bet = input(f"Player: {self.name}\nPot: {self.pot}\nHow much you wanna bet? (enter 0 to skip this round): ")
+				print('')
+				if self.bet not in (str(i) for i in range(0,self.pot+1)):
+					print(f'***Please enter a valid input.***\n***You must choose a value between 0 and {self.pot}***')
+					print('')
+		self.bet = int(self.bet)
+		if self.bet != 0:
+			self.pot -=  self.bet
+			print(f'Making a bet for {self.name}; Amount: ${self.bet}; You have ${self.pot} left')
+			print('')
+		else:
+			print(f'{self.name} has chosen to skip this round')
+			print('')
+
 
 class AmericanRoulette(Roulette):
 	def __init__(self):
@@ -103,7 +117,3 @@ class FrenchRoulette(Roulette):
 
 players = Players()
 game = Game()
-# for player in players.playersList:
-# 	print(player.name)
-# 	print(player.bank)
-# 	print('')
