@@ -12,7 +12,6 @@ class Game:
 		self.instantiatePlayers()
 		self.runGame()
 
-
 	def selectRouletteType(self):
 		#Method for selecting roulette type
 		while self.selectedRoulette not in ['1','2','3']:
@@ -59,16 +58,11 @@ class Game:
 		print('')
 
 	def runGame(self):
-		# while True:
 		for player in players.playersList:
-			player.makeBet()
-		print('All bets were made')
-
-
-class Roulette:
-	def __init__(self):
-		self.board = [str(i) for i in range(0,37)]
-
+			player.enterBetValue()
+			player.chooseBetType()
+		print('***All bets were made***')
+		print('')
 
 class Players:
 	def __init__(self):
@@ -83,7 +77,7 @@ class Player:
 		self.pot = 100
 		self.bet = 0
 
-	def makeBet(self):
+	def enterBetValue(self):
 		while self.bet not in (str(i) for i in range(0,self.pot+1)):
 			if self.pot > 0:
 				self.bet = input(f"Player: {self.name}\nPot: {self.pot}\nHow much you wanna bet? (enter 0 to skip this round): ")
@@ -100,11 +94,57 @@ class Player:
 			print(f'{self.name} has chosen to skip this round')
 			print('')
 
-
-class AmericanRoulette(Roulette):
+class Roulette:
 	def __init__(self):
-		super().__init__()
-		self.board.insert(0,'00')
+		self.board = [i for i in range(0,37)]
+
+	def determineIfEven(self,id):
+		if id % 2 == 0:
+			return True
+		return False
+
+	def determineIfLessOrEqualThan18(self,id):
+		if id <= 18:
+			return True
+		return False
+
+	def determineIfRed(self,id):
+		if id in [1,3,5,7,9,12,14,16,18,19,21,23,25,23,25,27,30,32,34,36]:
+			return True
+		return False
+
+	def determineIfFirst12(self,id):
+		if 1<=id<=12:
+			return True
+		return False
+
+	def determineIfSecond12(self,id):
+		if 13<=id<=24:
+			return True
+		return False
+
+	def determineIfThird12(self,id):
+		if 25<=id<=36:
+			return True
+		return False
+
+	def determineIfFirstColumn(self,id):
+		if id in range(1,37,3):
+			return True
+		return False
+
+	def determineIfSecondColumn(self,id):
+		if id in range(2,37,3):
+			return True
+		return False
+
+	def determineIfThirdColumn(self,id):
+		if id in range(3,37,3):
+			return True
+		return False
+
+	# def buildRoulette(self):
+	# 	for i in range(1,37):
 
 
 class EuropeanRoulette(Roulette):
@@ -114,6 +154,11 @@ class EuropeanRoulette(Roulette):
 class FrenchRoulette(Roulette):
 	def __init__(self):
 		super().__init__()
+
+class AmericanRoulette(Roulette):
+	def __init__(self):
+		super().__init__()
+		self.board.insert(0,'00')
 
 players = Players()
 game = Game()
