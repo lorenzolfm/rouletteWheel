@@ -2,11 +2,9 @@ import random
 
 class Game:
 	def __init__(self):
-		#Select roulette type
-		print("*****Welcome to Bash Terminal Cassino!*****\n\nLet's play a Roulette Game!\n")
+		print("*****Welcome to Bash Terminal Cassino!*****\nLet's play a Roulette Game!\n")
 		print("***If you don't know how to play this game, you can take a look at the readme.txt file for instructions and rules***")
-		self.rouletteDict = {'1': 'American Roulette', '2': 'European Roulette', '3': 'French Roulette' }
-		self.selectedRoulette = None
+		self.roulette = None
 		self.numberOfPlayers = 0
 		#Faz sentido executar o jogo inteiro dentro do método construtor? Acho que nao
 		self.selectRouletteType()
@@ -16,19 +14,20 @@ class Game:
 		self.runGame()
 
 	def selectRouletteType(self):
-		while self.selectedRoulette not in ['1','2','3']:
-			self.selectedRoulette = input('Select game style:\n\n1-American Roulette\n2-European Roueltte\n3-French Roulette\n')
+		selectedRoulette = None
+		while selectedRoulette not in ['1','2','3']:
+			selectedRoulette = input('Select game style:\n\n1-American Roulette\n2-European Roueltte\n3-French Roulette\n')
 			print('')
 			print('')
-			if self.selectedRoulette == '1':
-				print(f'Ok! Loading the {self.rouletteDict[self.selectedRoulette]}\n')
-				roulette = AmericanRoulette()
-			elif self.selectedRoulette == '2':
-				print(f'Ok! Loading the {self.rouletteDict[self.selectedRoulette]}\n')
-				roulette = EuropeanRoulette()
-			elif self.selectedRoulette == '3':
-				print(f'Ok! Loading the {self.rouletteDict[self.selectedRoulette]}\n')
-				roulette = FrenchRoulette()
+			if selectedRoulette == '1':
+				self.roulette = AmericanRoulette()
+				print(f'Ok! Loading the {self.roulette.name}\n')
+			elif selectedRoulette == '2':
+				self.roulette = EuropeanRoulette()
+				print(f'Ok! Loading the {self.roulette.name}\n')
+			elif selectedRoulette == '3':
+				self.roulette = FrenchRoulette()
+				print(f'Ok! Loading the {self.roulette.name}\n')
 			else:
 				print('***You must select the Roulette by typing 1, 2 or 3***\n')
 
@@ -38,9 +37,8 @@ class Game:
 		self.numberOfPlayers = int(self.numberOfPlayers)
 		print('')
 
-
 	def showGameSettings(self):
-		print(f'Setting {self.rouletteDict[self.selectedRoulette]} game for {self.numberOfPlayers} player(s)!\n')
+		print(f'Setting {self.roulette.name} game for {self.numberOfPlayers} player(s)!\n')
 
 	def instantiatePlayers(self):
 		for playerNumber in range(1,self.numberOfPlayers + 1):
@@ -55,15 +53,17 @@ class Game:
 			else:
 				players.addPlayer(name)
 		print('')
-		print(f"***Ok! Let's begin the {self.rouletteDict[self.selectedRoulette]}***")
-		print('')
-		print('')
+		print(f"***Ok! Let's begin the {self.roulette.name}***\n")
 
 	def runGame(self):
 		while True:
 			for player in players.playersList:
 				player.enterBetValue()
 				player.chooseBetType()
+			#Sortear numero
+			#Determinar se vencedor
+			#Distribuir dinheiro
+
 			print('***All bets were made***\n')
 
 class Players:
@@ -80,6 +80,7 @@ class Player:
 		self.betAmmount = 0
 		self.roundSkipedStreak = 0
 		self.bet = None
+		self.skiped = False
 
 	def enterBetValue(self):
 		while self.betAmmount not in (str(i) for i in range(0,self.pot+1)):
@@ -94,7 +95,6 @@ class Player:
 			if self.roundSkipedStreak != 0:
 				self.roundSkipedStreak = 0
 			print(f'***Making a bet for {self.name}; Amount: ${self.betAmmount}; You have ${self.pot} left***\n')
-
 		else:
 			self.roundSkipedStreak += 1
 			if self.roundSkipedStreak >= 3:
@@ -105,22 +105,44 @@ class Player:
 				print(f'***{self.name} has chosen to skip this round***\n***Skips Left before removal: {3-self.roundSkipedStreak}***\n')
 
 	def chooseBetType(self):
-		choice = 0
-		print(f'{self.name}, Choose your bet type')
-		while choice not in ['1','2']:
-			choice = input('Enter 1 to make an INNER Bet - Enter 2 to make an OUTSIDE bet: ')
-			print('')
-		if choice == '1':
-			print("You're making a inner bet")
-		else:
-			category = ''
-			while category not in (str(i) for i in range(1,13)):
-				category = input("Select bet category:\n1-Red\n2-Black\n3-Even\n4-Odd\n5-One to Eighteen\n6-Eighteen to Thirty-Six\n7-First 12\n8-Second 12\n9-Third 12\n10-Column 1\n11-Column 2\n12-Column 3\n")
+		if self.roundSkipedStreak == 0:
+			choice = 0
+			print(f'{self.name}, Choose your bet type')
+			while choice not in ['1','2']:
+				choice = input('Enter 1 to make an INNER Bet - Enter 2 to make an OUTSIDE bet: ')
+				print('')
+			if choice == '1':
+				id = None
+				while id not in (str(i) for i in range(0,37)):
+					id = input('Select a number between 0 and 36: ')
+				id = int(id)
+			else:
+				category = None
+				while category not in (str(i) for i in range(1,13)):
+					category = input("Select bet category:\n1-Red\n2-Black\n3-Even\n4-Odd\n5-One to Eighteen\n6-Eighteen to Thirty-Six\n7-First 12\n8-Second 12\n9-Third 12\n10-Column 1\n11-Column 2\n12-Column 3\n")
 
 class Roulette:
 	def __init__(self):
-		self.board = []
 		self.result = None
+		self.bank = 1000
+
+	def spinRoulette(self):
+		self.result = random.randrange(0,37)
+		if self.result == 0:
+			dict = {'id': 0}
+		else:
+			dict = {
+				'id': self.result,
+				'even': self.determineIfEven(self.result),
+				'red': self.determineIfRed(self.result),
+				'lessOrEqual18': self.determineIfLessOrEqualThan18(self.result),
+				'firstTwelve': self.determineIfFirst12(self.result),
+				'secondTwelve': self.determineIfSecond12(self.result),
+				'thirdTwelve': self.determineIfThird12(self.result),
+				'firstColumn': self.determineIfFirstColumn(self.result),
+				'secondColumn': self.determineIfSecondColumn(self.result),
+				'thirdColumn': self.determineIfThirdColumn(self.result),
+			}
 
 	def determineIfEven(self,number):
 		if number % 2 == 0:
@@ -167,42 +189,39 @@ class Roulette:
 			return True
 		return False
 
-	def createBoard(self):
-		for number in [i for i in range(0,37)]:
-			if number == 0:
-				self.board.append({'id':number})
-			else:
-				dict = {
-					'id': number,
-				    'even': self.determineIfEven(number),
-				    'red': self.determineIfRed(number),
-				    'lessOrEqual18': self.determineIfLessOrEqualThan18(number),
-				    'firstTwelve': self.determineIfFirst12(number),
-				    'secondTwelve': self.determineIfSecond12(number),
-				    'thirdTwelve': self.determineIfThird12(number),
-				    'firstColumn': self.determineIfFirstColumn(number),
-				    'secondColumn': self.determineIfSecondColumn(number),
-				    'thirdColumn': self.determineIfThirdColumn(number),
-				}
-				self.board.append(dict)
-
-	def spinRoulette(self):
-		self.result = random.randrange(0,37)
+	# def createBoard(self):
+	# 	for number in [i for i in range(0,37)]:
+	# 		if number == 0:
+	# 			self.board.append({'id':number})
+	# 		else:
+	# 			dict = {
+	# 				'id': number,
+	# 			    'even': self.determineIfEven(number),
+	# 			    'red': self.determineIfRed(number),
+	# 			    'lessOrEqual18': self.determineIfLessOrEqualThan18(number),
+	# 			    'firstTwelve': self.determineIfFirst12(number),
+	# 			    'secondTwelve': self.determineIfSecond12(number),
+	# 			    'thirdTwelve': self.determineIfThird12(number),
+	# 			    'firstColumn': self.determineIfFirstColumn(number),
+	# 			    'secondColumn': self.determineIfSecondColumn(number),
+	# 			    'thirdColumn': self.determineIfThirdColumn(number),
+	# 			}
+	# 			self.board.append(dict)
 
 class EuropeanRoulette(Roulette):
 	def __init__(self):
 		super().__init__()
-		self.createBoard()
+		self.name = 'European Roulette'
 
 class FrenchRoulette(Roulette):
 	def __init__(self):
 		super().__init__()
-		self.createBoard()
+		self.name = 'French Roulette'
 
 class AmericanRoulette(Roulette):
 	def __init__(self):
 		super().__init__()
-		self.createBoard()
+		self.name = 'American Roulette'
 		# self.board.insert(0,'00')
 
 players = Players()
