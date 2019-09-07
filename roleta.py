@@ -56,15 +56,50 @@ class Game:
 		print(f"***Ok! Let's begin the {self.roulette.name}***\n")
 
 	def runGame(self):
-		while True:
+		gameOver = False
+		while not gameOver:
+			luckyNumber = self.roulette.spinRoulette()
+			print(f'House Money: {self.roulette.bank}')
 			for player in players.playersList:
 				player.enterBetValue()
 				player.chooseBetType()
+			print('***All bets were made***\n')
+			for player in players.playersList:
+				if player.betTypeChoice == '1':
+					if player.betId == luckyNumber['id']:
+						print(f'{player.name} got a bullseye\n')
+						#Verificar se bank tem essa quantia
+						if 35*player.betAmmount <= self.roulette.bank:
+							self.roulette.bank -= 35*player.betAmmount
+							player.pot += 35*player.betAmmount
+						else:
+							print(f'Game Over! {player.name} broke the bank!')
+							gameOver = True
+							quit()
+					else:
+						print(f'No luck for {player.name} :(\n')
+						self.roulette.bank += player.betAmmount
+						player.betAmmount = 0
+
+				else:
+					pass
+					#checaCategoria(numeroCategoriaSelecionada,booleanoDoNumero)
+					 # if player.outsideBetCategory == '1':
+						#  if luckyNumber['red'] == True:
+	 					# 	 print(f'{player.name} got a bullseye\n')
+	 					# else:
+	 					# 	 print(f'No luck for {player.name} :(\n')
+					 # elif player.outsideBetCategory == '2':
+						#  if luckyNumber['red'] == False:
+						# 	 print(f'No luck for {player.name} :(\n')
+
+
+
 			#Sortear numero
 			#Determinar se vencedor
 			#Distribuir dinheiro
 
-			print('***All bets were made***\n')
+
 
 class Players:
 	def __init__(self):
@@ -81,6 +116,9 @@ class Player:
 		self.roundSkipedStreak = 0
 		self.bet = None
 		self.skiped = False
+		self.betTypeChoice = None
+		self.betId = None
+		self.outsideBetCategory = None
 
 	def enterBetValue(self):
 		while self.betAmmount not in (str(i) for i in range(0,self.pot+1)):
@@ -106,20 +144,18 @@ class Player:
 
 	def chooseBetType(self):
 		if self.roundSkipedStreak == 0:
-			choice = 0
 			print(f'{self.name}, Choose your bet type')
-			while choice not in ['1','2']:
-				choice = input('Enter 1 to make an INNER Bet - Enter 2 to make an OUTSIDE bet: ')
+			while self.betTypeChoice not in ['1','2']:
+				self.betTypeChoice = input('Enter 1 to make an INNER Bet - Enter 2 to make an OUTSIDE bet: ')
 				print('')
-			if choice == '1':
-				id = None
-				while id not in (str(i) for i in range(0,37)):
-					id = input('Select a number between 0 and 36: ')
-				id = int(id)
+			if self.betTypeChoice == '1':
+				self.betId = None
+				while self.betId not in (str(i) for i in range(0,37)):
+					self.betId = input('Select a number between 0 and 36: ')
+				self.betId = int(self.betId)
 			else:
-				category = None
-				while category not in (str(i) for i in range(1,13)):
-					category = input("Select bet category:\n1-Red\n2-Black\n3-Even\n4-Odd\n5-One to Eighteen\n6-Eighteen to Thirty-Six\n7-First 12\n8-Second 12\n9-Third 12\n10-Column 1\n11-Column 2\n12-Column 3\n")
+				while self.outsideBetCategory not in (str(i) for i in range(1,13)):
+					self.outsideBetCategory = input("Select bet category:\n1-Red\n2-Black\n3-Even\n4-Odd\n5-One to Eighteen\n6-Eighteen to Thirty-Six\n7-First 12\n8-Second 12\n9-Third 12\n10-Column 1\n11-Column 2\n12-Column 3\n")
 
 class Roulette:
 	def __init__(self):
@@ -143,6 +179,8 @@ class Roulette:
 				'secondColumn': self.determineIfSecondColumn(self.result),
 				'thirdColumn': self.determineIfThirdColumn(self.result),
 			}
+		print(dict)
+		return dict
 
 	def determineIfEven(self,number):
 		if number % 2 == 0:
