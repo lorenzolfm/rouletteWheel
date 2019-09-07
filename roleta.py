@@ -2,8 +2,11 @@ import random
 
 class Game:
 	def __init__(self):
-		print("*****Welcome to Bash Terminal Cassino!*****\nLet's play a Roulette Game!\n")
-		print("***If you don't know how to play this game, you can take a look at the readme.txt file for instructions and rules***")
+		print('\n------------------------------------------------')
+		print("+-+-+- Welcome to Bash Terminal Cassino!-+-+-+\n+-+-+- Let's play a Roulette Game!-+-+-+\n")
+		print("+- If you don't know how to play this game -+\n+- you can take a look at the readme.txt file -+\n+- for instructions and rules -+\n")
+		print("+- You can press CTRL + D at any time to exit -+")
+		print('------------------------------------------------\n')
 		self.roulette = None
 		self.numberOfPlayers = 0
 		#Faz sentido executar o jogo inteiro dentro do método construtor? Acho que nao
@@ -16,44 +19,49 @@ class Game:
 	def selectRouletteType(self):
 		selectedRoulette = None
 		while selectedRoulette not in ['1','2','3']:
-			selectedRoulette = input('Select game style:\n\n1-American Roulette\n2-European Roueltte\n3-French Roulette\n')
-			print('')
-			print('')
+			print('\n------------------------------------------------')
+			selectedRoulette = input('+- 1-American Roulette -+\n+- 2-European Roueltte -+\n+- 3-French Roulette -+\nSelect game style: ')
+			print('------------------------------------------------\n')
 			if selectedRoulette == '1':
 				self.roulette = AmericanRoulette()
-				print(f'Ok! Loading the {self.roulette.name}\n')
+				print(f'\n+-+-+- Ok! Loading the {self.roulette.name} -+-+-+\n')
 			elif selectedRoulette == '2':
 				self.roulette = EuropeanRoulette()
-				print(f'Ok! Loading the {self.roulette.name}\n')
+				print(f'\n+-+-+- Ok! Loading the {self.roulette.name} -+-+-+\n')
 			elif selectedRoulette == '3':
 				self.roulette = FrenchRoulette()
-				print(f'Ok! Loading the {self.roulette.name}\n')
+				print(f'\n+-+-+- Ok! Loading the {self.roulette.name} -+-+-+\n')
 			else:
-				print('***You must select the Roulette by typing 1, 2 or 3***\n')
+				print('\n+- You must select the Roulette by typing 1, 2 or 3 -+\n')
 
 	def selectNumberOfPlayers(self):
 		while self.numberOfPlayers not in (str(i) for i in range(1,11)):
-			self.numberOfPlayers = input('Enter the number of players in this game (1-10)\n')
+			print('\n---------------------------------------------------')
+			self.numberOfPlayers = input('+- Enter the number of players in this game (1-10): ')
+			print('---------------------------------------------------\n')
 		self.numberOfPlayers = int(self.numberOfPlayers)
 		print('')
 
 	def showGameSettings(self):
-		print(f'Setting {self.roulette.name} game for {self.numberOfPlayers} player(s)!\n')
+		print('\n------------------------------------------------')
+		print(f'Setting {self.roulette.name} game for {self.numberOfPlayers} player(s)!')
+		print('------------------------------------------------\n')
 
 	def instantiatePlayers(self):
 		for playerNumber in range(1,self.numberOfPlayers + 1):
-			name = input(f"Player {playerNumber}, enter your name: ")
+			name = input(f"+- Player {playerNumber}, enter your name: ")
 			print('')
 			if self.numberOfPlayers > 1:
 				while name in [player.name for player in players.playersList]:
-					name = input('***Name already registered***\nPlease enter a different name: ')
+					name = input(f'+-+-+- Name already registered -+-+-+\nPlease enter a different name for player {playerNumber}: ')
 					print('')
 				else:
 					players.addPlayer(name)
 			else:
 				players.addPlayer(name)
-		print('')
-		print(f"***Ok! Let's begin the {self.roulette.name}***\n")
+		print('\n------------------------------------------------------')
+		print(f"+-+-+- Ok! Let's begin the {self.roulette.name} -+-+-+")
+		print('------------------------------------------------------\n')
 
 	def runGame(self):
 		gameOver = False
@@ -121,40 +129,45 @@ class Player:
 	def enterBetValue(self):
 		while self.betAmmount not in (str(i) for i in range(0,self.pot+1)):
 			if self.pot > 0:
+				print('\n--------------------------------------------------------')
 				self.betAmmount = input(f"Player: {self.name}\nPot: {self.pot}\nHow much you wanna bet? (enter 0 to skip this round): ")
-				print('')
+				print('--------------------------------------------------------\n')
 				if self.betAmmount not in (str(i) for i in range(0,self.pot+1)):
-					print(f'***Please enter a valid input.***\n***You must choose a value between 0 and {self.pot} (integers only)***\n')
+					print(f'+-+-+- Please enter a valid input. -+-+-+\n+-+-+- You must choose a value between 0 and {self.pot} (integers only) -+-+-+\n')
 		self.betAmmount = int(self.betAmmount)
 		if self.betAmmount != 0:
 			self.pot -=  self.betAmmount
 			if self.roundSkipedStreak != 0:
 				self.roundSkipedStreak = 0
-			print(f'***Making a bet for {self.name}; Amount: ${self.betAmmount}; You have ${self.pot} left***\n')
+			print('\n------------------------------------------------------------------')
+			print(f'+-+-+- Making a bet for {self.name}; Amount: ${self.betAmmount}; You have ${self.pot} left -+-+-+')
+			print('------------------------------------------------------------------\n')
 		else:
 			self.roundSkipedStreak += 1
 			if self.roundSkipedStreak >= 3:
 				players.playersList.remove(self)
-				print(f"***{self.name}, You're out! Skiped 3 rounds in a row!***\n")
-
+				print('\n------------------------------------------------------------------')
+				print(f"+-+-+- {self.name}, You're out! Skiped 3 rounds in a row! -+-+-+")
+				print('------------------------------------------------------------------\n')
 			else:
-				print(f'***{self.name} has chosen to skip this round***\n***Skips Left before removal: {3-self.roundSkipedStreak}***\n')
+				print(f'+- {self.name} has chosen to skip this round -+\n+- Skips Left before removal: {3-self.roundSkipedStreak} -+\n')
 
 	def chooseBetType(self):
 		if self.roundSkipedStreak == 0:
+			print('\n------------------------------------------------------------------')
 			print(f'{self.name}, Choose your bet type')
 			while self.betTypeChoice not in ['1','2']:
 				self.betTypeChoice = input('Enter 1 to make an INNER Bet - Enter 2 to make an OUTSIDE bet: ')
-				print('')
 			if self.betTypeChoice == '1':
 				self.betId = None
 				while self.betId not in (str(i) for i in range(0,37)):
 					self.betId = input('Select a number between 0 and 36: ')
+					print('------------------------------------------------------------------\n')
 				self.betId = int(self.betId)
 			else:
 				while self.outsideBetCategory not in (str(i) for i in range(1,13)):
 					self.outsideBetCategory = input("Select bet category:\n1-Red\n2-Black\n3-Even\n4-Odd\n5-One to Eighteen\n6-Eighteen to Thirty-Six\n7-First 12\n8-Second 12\n9-Third 12\n10-Column 1\n11-Column 2\n12-Column 3\n")
-
+					print('------------------------------------------------------------------\n')
 class Roulette:
 	def __init__(self):
 		self.result = None
