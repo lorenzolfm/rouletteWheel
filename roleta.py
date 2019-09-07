@@ -1,7 +1,10 @@
+import random
+
 class Game:
 	def __init__(self):
 		#Select roulette type
-		print("*****Welcome to Bash Cassino!*****\n\nLet's play a Roulette Game!\n")
+		print("*****Welcome to Bash Terminal Cassino!*****\n\nLet's play a Roulette Game!\n")
+		print("***If you don't know how to play this game, you can take a look at the readme.txt file for instructions and rules***")
 		self.rouletteDict = {'1': 'American Roulette', '2': 'European Roulette', '3': 'French Roulette' }
 		self.selectedRoulette = None
 		self.numberOfPlayers = 0
@@ -13,7 +16,6 @@ class Game:
 		self.runGame()
 
 	def selectRouletteType(self):
-		#Method for selecting roulette type
 		while self.selectedRoulette not in ['1','2','3']:
 			self.selectedRoulette = input('Select game style:\n\n1-American Roulette\n2-European Roueltte\n3-French Roulette\n')
 			print('')
@@ -28,14 +30,14 @@ class Game:
 				print(f'Ok! Loading the {self.rouletteDict[self.selectedRoulette]}\n')
 				roulette = FrenchRoulette()
 			else:
-				print('You must select the Roulette by typing 1, 2 or 3\n')
+				print('***You must select the Roulette by typing 1, 2 or 3***\n')
 
 	def selectNumberOfPlayers(self):
 		while self.numberOfPlayers not in (str(i) for i in range(1,11)):
 			self.numberOfPlayers = input('Enter the number of players in this game (1-10)\n')
 		self.numberOfPlayers = int(self.numberOfPlayers)
 		print('')
-		print('')
+
 
 	def showGameSettings(self):
 		print(f'Setting {self.rouletteDict[self.selectedRoulette]} game for {self.numberOfPlayers} player(s)!\n')
@@ -61,9 +63,8 @@ class Game:
 		while True:
 			for player in players.playersList:
 				player.enterBetValue()
-			# player.chooseBetType()
-		print('***All bets were made***')
-		print('')
+				player.chooseBetType()
+			print('***All bets were made***\n')
 
 class Players:
 	def __init__(self):
@@ -76,23 +77,23 @@ class Player:
 	def __init__(self,name):
 		self.name = name
 		self.pot = 100
-		self.bet = 0
+		self.betAmmount = 0
 		self.roundSkipedStreak = 0
+		self.bet = None
 
 	def enterBetValue(self):
-		while self.bet not in (str(i) for i in range(0,self.pot+1)):
+		while self.betAmmount not in (str(i) for i in range(0,self.pot+1)):
 			if self.pot > 0:
-				self.bet = input(f"Player: {self.name}\nPot: {self.pot}\nHow much you wanna bet? (enter 0 to skip this round): ")
+				self.betAmmount = input(f"Player: {self.name}\nPot: {self.pot}\nHow much you wanna bet? (enter 0 to skip this round): ")
 				print('')
-				if self.bet not in (str(i) for i in range(0,self.pot+1)):
-					print(f'***Please enter a valid input.***\n***You must choose a value between 0 and {self.pot}***')
-					print('')
-		self.bet = int(self.bet)
-		if self.bet != 0:
-			self.pot -=  self.bet
+				if self.betAmmount not in (str(i) for i in range(0,self.pot+1)):
+					print(f'***Please enter a valid input.***\n***You must choose a value between 0 and {self.pot} (integers only)***\n')
+		self.betAmmount = int(self.betAmmount)
+		if self.betAmmount != 0:
+			self.pot -=  self.betAmmount
 			if self.roundSkipedStreak != 0:
 				self.roundSkipedStreak = 0
-			print(f'Making a bet for {self.name}; Amount: ${self.bet}; You have ${self.pot} left\n')
+			print(f'***Making a bet for {self.name}; Amount: ${self.betAmmount}; You have ${self.pot} left***\n')
 
 		else:
 			self.roundSkipedStreak += 1
@@ -103,10 +104,23 @@ class Player:
 			else:
 				print(f'***{self.name} has chosen to skip this round***\n***Skips Left before removal: {3-self.roundSkipedStreak}***\n')
 
+	def chooseBetType(self):
+		choice = 0
+		print(f'{self.name}, Choose your bet type')
+		while choice not in ['1','2']:
+			choice = input('Enter 1 to make an INNER Bet - Enter 2 to make an OUTSIDE bet: ')
+			print('')
+		if choice == '1':
+			print("You're making a inner bet")
+		else:
+			category = ''
+			while category not in (str(i) for i in range(1,13)):
+				category = input("Select bet category:\n1-Red\n2-Black\n3-Even\n4-Odd\n5-One to Eighteen\n6-Eighteen to Thirty-Six\n7-First 12\n8-Second 12\n9-Third 12\n10-Column 1\n11-Column 2\n12-Column 3\n")
+
 class Roulette:
 	def __init__(self):
 		self.board = []
-
+		self.result = None
 
 	def determineIfEven(self,number):
 		if number % 2 == 0:
@@ -172,6 +186,8 @@ class Roulette:
 				}
 				self.board.append(dict)
 
+	def spinRoulette(self):
+		self.result = random.randrange(0,37)
 
 class EuropeanRoulette(Roulette):
 	def __init__(self):
