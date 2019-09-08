@@ -40,7 +40,6 @@ class Game:
 	def spinRoulette(self):
 		self.drawnNumber = self.roulette.drawnNumber()
 
-
 	def checkResult(self):
 		pass
 
