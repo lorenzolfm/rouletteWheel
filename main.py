@@ -9,10 +9,9 @@ class Game:
 		self.displayIntro()
 		settings.runSettingsRoutine()
 		while self.run:
+			#Check to see if there are any players left
 			self.getBets()
-			if players.playersList == []:
-				self.run = False
-				print('All players have been eliminated')
+			self.spinRoulette()
 
 	def displayIntro(self):
 		print('\n------------------------------------------------')
@@ -41,6 +40,9 @@ class Game:
 		for player in players.playersList:
 			player.enterBetValue()
 			player.chooseBet()
+
+	def spinRoulette(self):
+		pass
 
 class GameSettings:
 	def __init__(self):
@@ -151,10 +153,10 @@ class Player:
 				betTypeChoice = input('Enter 1 to make an INNER Bet - Enter 2 to make an OUTSIDE bet: ')
 			if betTypeChoice == '1':
 				self.betId = None
+				#Aqui tem que ter a condicao do tabuleiro americano com 00
 				while self.betId not in (str(i) for i in range(0,37)):
 					self.betId = input('\nSelect a number between 0 and 36: ')
 					print('------------------------------------------------------------------\n')
-				self.betId = int(self.betId)
 			else:
 				while self.outsideBetCategory not in (str(i) for i in range(1,13)):
 					self.outsideBetCategory = input("\n1-Red\n2-Black\n3-Even\n4-Odd\n5-One to Eighteen\n6-Eighteen to Thirty-Six\n7-First 12\n8-Second 12\n9-Third 12\n10-Column 1\n11-Column 2\n12-Column 3\nSelect bet category: ")
@@ -164,6 +166,39 @@ class Roulette:
 	def __init__(self):
 		self.result = None
 		self.bank = 1000
+		self.board = []
+		self.createBoard()
+
+	def createBoard(self):
+		for number in range(1,37):
+			self.board.append(
+				{
+					'id': str(number),
+					'even': determineIfEven(number),
+					'red': determineIfRed(number),
+					'lessOrEqual18': determineIfLessOrEqualThan18(number),
+					'firstTwelve': determineIfFirst12(number),
+					'secondTwelve': determineIfSecond12(number),
+					'thirdTwelve': determineIfThird12(number),
+					'firstColumn': determineIfFirstColumn(number),
+					'secondColumn': determineIfSecondColumn(number),
+					'thirdColumn': determineIfThirdColumn(number),
+				}
+			)
+		self.board.insert(0,
+			{
+				'id': '0',
+				'even': False,
+				'red': False,
+				'lessOrEqual18': False,
+				'firstTwelve': False,
+				'secondTwelve': False,
+				'thirdTwelve': False,
+				'firstColumn': False,
+				'secondColumn': False,
+				'thirdColumn': False,
+			}
+		)
 
 class EuropeanRoulette(Roulette):
 	def __init__(self):
@@ -179,7 +214,24 @@ class AmericanRoulette(Roulette):
 	def __init__(self):
 		super().__init__()
 		self.name = 'American Roulette'
-		# self.board.insert(0,{id : '00'})
+		self.add00()
+
+	def add00(self):
+		self.board.insert(0,
+			{
+				'id': '00',
+				'even': False,
+				'red': False,
+				'lessOrEqual18': False,
+				'firstTwelve': False,
+				'secondTwelve': False,
+				'thirdTwelve': False,
+				'firstColumn': False,
+				'secondColumn': False,
+				'thirdColumn': False,
+			}
+		)
+
 
 players = Players()
 settings = GameSettings()
