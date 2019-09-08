@@ -10,6 +10,7 @@ class Game:
 	def runGame(self):
 		self.displayIntro()
 		settings.runSettingsRoutine()
+		self.instantiateRoulette()
 		while self.run:
 			#Check to see if there are any players left
 			self.getBets()
@@ -23,21 +24,13 @@ class Game:
 		print("+- You can press CTRL + D at any time to exit -+")
 		print('------------------------------------------------\n')
 
-	def instantiatePlayers(self):
-		for playerNumber in range(1,self.numberOfPlayers + 1):
-			name = input(f"+- Player {playerNumber}, enter your name: ")
-			print('')
-			if self.numberOfPlayers > 1:
-				while name in [player.name for player in players.playersList]:
-					name = input(f'+-+-+- Name already registered -+-+-+\nPlease enter a different name for player {playerNumber}: ')
-					print('')
-				else:
-					players.addPlayer(name)
-			else:
-				players.addPlayer(name)
-		print('\n-----------------------------------------------------------')
-		print(f"+-+-+- Ok. Let's begin the {settings.rouletteType.name} game! -+-+-+")
-		print('-----------------------------------------------------------\n')
+	def instantiateRoulette(self):
+		if settings.selectedRoulette == '1':
+			self.roulette = AmericanRoulette()
+		elif settings.selectedRoulette == '2':
+			self.roulette = EuropeanRoulette()
+		else:
+			self.roulette = FrenchRoulette()
 
 	def getBets(self):
 		for player in players.playersList:
@@ -45,8 +38,7 @@ class Game:
 			player.chooseBet()
 
 	def spinRoulette(self):
-		#Isso nao faz sentido. A roleta tem que pertencer ao jogo, nao aos settings
-		self.drawnNumber = settings.rouletteType.drawnNumber()
+		self.drawnNumber = self.roulette.drawnNumber()
 
 
 	def checkResult(self):
@@ -54,25 +46,22 @@ class Game:
 
 class GameSettings:
 	def __init__(self):
-		self.rouletteType = None
+		self.rouletteTypes = {'1': 'American Roulette', '2': 'European Roulette', '3': 'French Roulette'}
+		self.selectedRoulette = None
 		self.numberOfPlayers = None
 
 	def setRouletteType(self):
 		#Dar um jeito nisso
-		selectedRoulette = None
-		while selectedRoulette not in ['1','2','3']:
+		while self.selectedRoulette not in ['1','2','3']:
 			print('\n------------------------------------------------')
-			selectedRoulette = input('+- 1-American Roulette -+\n+- 2-European Roueltte -+\n+- 3-French Roulette -+\nSelect game style: ')
+			self.selectedRoulette = input('+- 1-American Roulette -+\n+- 2-European Roueltte -+\n+- 3-French Roulette -+\nSelect game style: ')
 			print('------------------------------------------------\n')
-			if selectedRoulette == '1':
-				self.rouletteType = AmericanRoulette()
-				print(f'\n+-+-+- Ok! Loading the {self.rouletteType.name} -+-+-+\n')
-			elif selectedRoulette == '2':
-				self.rouletteType = EuropeanRoulette()
-				print(f'\n+-+-+- Ok! Loading the {self.rouletteType.name} -+-+-+\n')
-			elif selectedRoulette == '3':
-				self.rouletteType = FrenchRoulette()
-				print(f'\n+-+-+- Ok! Loading the {self.rouletteType.name} -+-+-+\n')
+			if self.selectedRoulette == '1':
+				print(f'\n+-+-+- Ok! Loading the {self.rouletteTypes[self.selectedRoulette]} -+-+-+\n')
+			elif self.selectedRoulette == '2':
+				print(f'\n+-+-+- Ok! Loading the {self.rouletteTypes[self.selectedRoulette]} -+-+-+\n')
+			elif self.selectedRoulette == '3':
+				print(f'\n+-+-+- Ok! Loading the {self.rouletteTypes[self.selectedRoulette]} -+-+-+\n')
 			else:
 				print('\n+- You must select the Roulette by typing 1, 2 or 3 -+\n')
 
@@ -97,12 +86,12 @@ class GameSettings:
 			else:
 				players.addPlayer(name)
 		print('\n-----------------------------------------------------------')
-		print(f"+-+-+- Ok. Let's begin the {settings.rouletteType.name} game! -+-+-+")
+		print(f"+-+-+- Ok. Let's begin the game! -+-+-+")
 		print('-----------------------------------------------------------\n')
 
 	def getGameSettings(self):
 		print('\n------------------------------------------------')
-		print(f'Setting {self.rouletteType.name} game for {self.numberOfPlayers} player(s)!')
+		print(f'Setting {self.rouletteTypes[self.selectedRoulette]} game for {self.numberOfPlayers} player(s)!')
 		print('------------------------------------------------\n')
 
 	def runSettingsRoutine(self):
