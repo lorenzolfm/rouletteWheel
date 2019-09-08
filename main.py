@@ -3,6 +3,8 @@ import random
 class Game:
 	def __init__(self):
 		self.run = True
+		self.roulette = None
+		self.drawnNumber = None
 		self.runGame()
 
 	def runGame(self):
@@ -12,6 +14,7 @@ class Game:
 			#Check to see if there are any players left
 			self.getBets()
 			self.spinRoulette()
+			self.checkResult()
 
 	def displayIntro(self):
 		print('\n------------------------------------------------')
@@ -42,6 +45,11 @@ class Game:
 			player.chooseBet()
 
 	def spinRoulette(self):
+		#Isso nao faz sentido. A roleta tem que pertencer ao jogo, nao aos settings
+		self.drawnNumber = settings.rouletteType.drawnNumber()
+
+
+	def checkResult(self):
 		pass
 
 class GameSettings:
@@ -50,6 +58,7 @@ class GameSettings:
 		self.numberOfPlayers = None
 
 	def setRouletteType(self):
+		#Dar um jeito nisso
 		selectedRoulette = None
 		while selectedRoulette not in ['1','2','3']:
 			print('\n------------------------------------------------')
@@ -174,15 +183,15 @@ class Roulette:
 			self.board.append(
 				{
 					'id': str(number),
-					'even': determineIfEven(number),
-					'red': determineIfRed(number),
-					'lessOrEqual18': determineIfLessOrEqualThan18(number),
-					'firstTwelve': determineIfFirst12(number),
-					'secondTwelve': determineIfSecond12(number),
-					'thirdTwelve': determineIfThird12(number),
-					'firstColumn': determineIfFirstColumn(number),
-					'secondColumn': determineIfSecondColumn(number),
-					'thirdColumn': determineIfThirdColumn(number),
+					'even': self.determineIfEven(number),
+					'red': self.determineIfRed(number),
+					'lessOrEqual18': self.determineIfLessOrEqualThan18(number),
+					'firstTwelve': self.determineIfFirst12(number),
+					'secondTwelve': self.determineIfSecond12(number),
+					'thirdTwelve': self.determineIfThird12(number),
+					'firstColumn': self.determineIfFirstColumn(number),
+					'secondColumn': self.determineIfSecondColumn(number),
+					'thirdColumn': self.determineIfThirdColumn(number),
 				}
 			)
 		self.board.insert(0,
@@ -199,6 +208,54 @@ class Roulette:
 				'thirdColumn': False,
 			}
 		)
+
+	def determineIfEven(self,number):
+		if number % 2 == 0:
+			return True
+		return False
+
+	def determineIfLessOrEqualThan18(self,number):
+		if number <= 18:
+			return True
+		return False
+
+	def determineIfRed(self,number):
+		if number in [1,3,5,7,9,12,14,16,18,19,21,23,25,23,25,27,30,32,34,36]:
+			return True
+		return False
+
+	def determineIfFirst12(self,number):
+		if 1<=number<=12:
+			return True
+		return False
+
+	def determineIfSecond12(self,number):
+		if 13<=number<=24:
+			return True
+		return False
+
+	def determineIfThird12(self,number):
+		if 25<=number<=36:
+			return True
+		return False
+
+	def determineIfFirstColumn(self,number):
+		if number in range(1,37,3):
+			return True
+		return False
+
+	def determineIfSecondColumn(self,number):
+		if number in range(2,37,3):
+			return True
+		return False
+
+	def determineIfThirdColumn(self,number):
+		if number in range(3,37,3):
+			return True
+		return False
+
+	def drawnNumber(self):
+		return random.choice(self.board)
 
 class EuropeanRoulette(Roulette):
 	def __init__(self):
