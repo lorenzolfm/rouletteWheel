@@ -91,21 +91,7 @@ class Game:
 
 				else:
 					pass
-					#checaCategoria(numeroCategoriaSelecionada,booleanoDoNumero)
-					 # if player.outsideBetCategory == '1':
-						#  if luckyNumber['red'] == True:
-	 					# 	 print(f'{player.name} got a bullseye\n')
-	 					# else:
-	 					# 	 print(f'No luck for {player.name} :(\n')
-					 # elif player.outsideBetCategory == '2':
-						#  if luckyNumber['red'] == False:
-						# 	 print(f'No luck for {player.name} :(\n')
 
-
-
-			#Sortear numero
-			#Determinar se vencedor
-			#Distribuir dinheiro
 
 class Players:
 	def __init__(self):
@@ -161,12 +147,12 @@ class Player:
 			if self.betTypeChoice == '1':
 				self.betId = None
 				while self.betId not in (str(i) for i in range(0,37)):
-					self.betId = input('Select a number between 0 and 36: ')
+					self.betId = input('\nSelect a number between 0 and 36: ')
 					print('------------------------------------------------------------------\n')
 				self.betId = int(self.betId)
 			else:
 				while self.outsideBetCategory not in (str(i) for i in range(1,13)):
-					self.outsideBetCategory = input("Select bet category:\n1-Red\n2-Black\n3-Even\n4-Odd\n5-One to Eighteen\n6-Eighteen to Thirty-Six\n7-First 12\n8-Second 12\n9-Third 12\n10-Column 1\n11-Column 2\n12-Column 3\n")
+					self.outsideBetCategory = input("\n1-Red\n2-Black\n3-Even\n4-Odd\n5-One to Eighteen\n6-Eighteen to Thirty-Six\n7-First 12\n8-Second 12\n9-Third 12\n10-Column 1\n11-Column 2\n12-Column 3\nSelect bet category: ")
 					print('------------------------------------------------------------------\n')
 class Roulette:
 	def __init__(self):
@@ -237,25 +223,6 @@ class Roulette:
 		if number in range(3,37,3):
 			return True
 		return False
-
-	# def createBoard(self):
-	# 	for number in [i for i in range(0,37)]:
-	# 		if number == 0:
-	# 			self.board.append({'id':number})
-	# 		else:
-	# 			dict = {
-	# 				'id': number,
-	# 			    'even': self.determineIfEven(number),
-	# 			    'red': self.determineIfRed(number),
-	# 			    'lessOrEqual18': self.determineIfLessOrEqualThan18(number),
-	# 			    'firstTwelve': self.determineIfFirst12(number),
-	# 			    'secondTwelve': self.determineIfSecond12(number),
-	# 			    'thirdTwelve': self.determineIfThird12(number),
-	# 			    'firstColumn': self.determineIfFirstColumn(number),
-	# 			    'secondColumn': self.determineIfSecondColumn(number),
-	# 			    'thirdColumn': self.determineIfThirdColumn(number),
-	# 			}
-	# 			self.board.append(dict)
 
 class EuropeanRoulette(Roulette):
 	def __init__(self):
