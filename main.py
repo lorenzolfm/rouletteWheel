@@ -12,9 +12,11 @@ class Game:
 		settings.runSettingsRoutine()
 		self.instantiateRoulette()
 		while self.run:
-			#Check to see if there are any players left
-			self.getBets()
+			#Making bets
 			self.spinRoulette()
+			self.getBets()
+			#Playing the round
+
 			self.checkResult()
 
 	def displayIntro(self):
@@ -39,10 +41,24 @@ class Game:
 
 	def spinRoulette(self):
 		self.drawnNumber = self.roulette.drawnNumber()
+		print(self.drawnNumber)
 
 	def checkResult(self):
-		pass
-
+		for player in players.playersList:
+			if player.betAmmount != 0:
+				if player.betTypeChoice == '1':
+					if player.betId == self.drawnNumber['id']:
+						print(f'{player.name} won!')
+						#subtract player.betAmmount*multiplier from self.roulette.bank and ad it to player.pot (the multiplier value depends on rouletteType it can be an atributte of child class based on a conditional)
+					else:
+						print(f"\nPlayer {player.name} bet on {player.betId}, but the drawn number was {self.drawnNumber['id']}\n")
+						#subtract player.betAmount from player and add it to the bank
+				else:
+					#if drawn number is not 0 or 00, call the respective function passing self.drawnNumber and compare it with mapping dictionary from player.betChoice
+					#if output is the same, make the correct changes to player.pot and bank
+					#else give betAmmount to bank
+					pass
+			#
 class GameSettings:
 	def __init__(self):
 		self.rouletteTypes = {'1': 'American Roulette', '2': 'European Roulette', '3': 'French Roulette'}
@@ -114,6 +130,7 @@ class Player:
 		self.betAmmount = 0
 		self.betId = None
 		self.outsideBetCategory = None
+		self.betTypeChoice = None
 
 	def enterBetValue(self):
 		while self.betAmmount not in (str(i) for i in range(0,self.pot+1)):
@@ -142,13 +159,13 @@ class Player:
 				print(f'+- {self.name} has chosen to skip this round -+\n+- Skips Left before removal: {3-self.roundSkipedStreak} -+\n')
 
 	def chooseBet(self):
-		betTypeChoice = None
+		self.betTypeChoice = None
 		if self.roundSkipedStreak == 0:
 			print('\n------------------------------------------------------------------')
 			print(f'{self.name}, Choose your bet type')
-			while betTypeChoice not in ['1','2']:
-				betTypeChoice = input('Enter 1 to make an INNER Bet - Enter 2 to make an OUTSIDE bet: ')
-			if betTypeChoice == '1':
+			while self.betTypeChoice not in ['1','2']:
+				self.betTypeChoice = input('Enter 1 to make an INNER Bet - Enter 2 to make an OUTSIDE bet: ')
+			if self.betTypeChoice == '1':
 				self.betId = None
 				#Aqui tem que ter a condicao do tabuleiro americano com 00
 				while self.betId not in (str(i) for i in range(0,37)):
