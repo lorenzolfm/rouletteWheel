@@ -50,9 +50,18 @@ class Game:
 					if player.betId == self.drawnNumber['id']:
 						print(f'{player.name} won!')
 						#subtract player.betAmmount*multiplier from self.roulette.bank and ad it to player.pot (the multiplier value depends on rouletteType it can be an atributte of child class based on a conditional)
+						player.pot += player.betAmmount*35 + player.betAmmount
+						self.roulette.bank -= player.betAmmount*35
+						print(f'{player.name} has won {player.betAmmount*35 + player.betAmmount} ')
+						print(f'{player.betAmmount*35} subtracted from bank')
+						print(f'{player.name} pot = {player.pot}')
+						print(f'Bank = {self.roulette.bank}')
 					else:
 						print(f"\nPlayer {player.name} bet on {player.betId}, but the drawn number was {self.drawnNumber['id']}\n")
-						#subtract player.betAmount from player and add it to the bank
+					    #add it to the bank
+						self.roulette.bank += player.betAmmount
+						print(f'Player pot = {player.pot}')
+						print(f'Bank = {self.roulette.bank}')
 				else:
 					#if drawn number is not 0 or 00, call the respective function passing self.drawnNumber and compare it with mapping dictionary from player.betChoice
 					#if output is the same, make the correct changes to player.pot and bank
