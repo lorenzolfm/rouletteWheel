@@ -63,11 +63,20 @@ class Game:
 						print(f'Player pot = {player.pot}')
 						print(f'Bank = {self.roulette.bank}')
 				else:
+					if not(self.drawnNumber['id'] == '00' or self.drawnNumber['id'] == '0'):
+						#Call the function
+						#If output is the same
+							#Ditribute money
+							pass
+					else:
+						self.roulette.bank += player.betAmmount
+						print(f'Player pot = {player.pot}')
+						print(f'Bank = {self.roulette.bank}')
 					#if drawn number is not 0 or 00, call the respective function passing self.drawnNumber and compare it with mapping dictionary from player.betChoice
 					#if output is the same, make the correct changes to player.pot and bank
 					#else give betAmmount to bank
 					pass
-			#
+
 class GameSettings:
 	def __init__(self):
 		self.rouletteTypes = {'1': 'American Roulette', '2': 'European Roulette', '3': 'French Roulette'}
