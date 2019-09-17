@@ -6,7 +6,13 @@ class Game:
         self.players = settings.setPlayers()
 
     def runGame(self):
-        settings.instantiateRoulette()
+        self.setBets()
+
+    def setBets(self):
+        while True:
+            for player in self.players:
+                player.setBetAmmount()
+            print(self.players)
 
 class Settings:
     def __init__(self):
@@ -38,7 +44,7 @@ class Settings:
 
     def setPlayers(self):
         self.setNumberOfPlayers()
-        self.instantiatePlayers()
+        return self.instantiatePlayers()
 
     def setNumberOfPlayers(self):
         while self.numberOfPlayers not in (str(i) for i in range(1,11)):
@@ -50,6 +56,7 @@ class Settings:
 
     def instantiatePlayers(self):
         self.numberOfPlayers = int(self.numberOfPlayers)
+        name = ''
         players = []
         for player in range(1,self.numberOfPlayers+1):
             name = input(f"+- Player {player}, enter your name: ")
@@ -66,12 +73,35 @@ class Settings:
 class Player:
     def __init__(self,name):
         self.name = name
-        self.roundSkipedStreak = 0
+        self.roundSkipStreak = 0
         self.pot = 100
         self.betAmmount = 0
 
     def __repr__(self):
         return f'{self.name}'
+
+    def setBetAmmount(self):
+        self.betAmmount = None
+        while self.betAmmount not in (str(i) for i in range(0,self.pot+1)):
+            print('\n--------------------------------------------------------')
+            self.betAmmount = input(f"Player: {self.name}\nPot: {self.pot}\nHow much you wanna bet? (enter 0 to skip this round): ")
+            print('--------------------------------------------------------\n')
+            if self.betAmmount not in (str(i) for i in range(0,self.pot+1)):
+                print(f'+-+-+- Please enter a valid input. -+-+-+\n+-+-+- You must choose an integer between 0 and {self.pot} (integers only) -+-+-+\n')
+        if self.betAmmount == '0':
+            self.roundSkipStreak += 1
+            if self.roundSkipStreak >= 3:
+                game.players.remove(self)
+                print('\n------------------------------------------------------------------')
+                print(f"+-+-+- {self.name}, You're out! Skiped 3 rounds in a row! -+-+-+")
+                print('------------------------------------------------------------------\n')
+            else:
+                print(f'+- {self.name} has chosen to skip this round -+\n+- Skips Left before removal: {3-self.roundSkipStreak} -+\n')
+        else:
+            self.betAmmount = int(self.betAmmount)
+            self.pot -=  self.betAmmount
+            if self.roundSkipStreak != 0:
+                self.roundSkipStreak = 0
 
 class Roulette:
     def __init__(self):
@@ -100,3 +130,4 @@ class FrenchRoulette(Roulette):
 
 settings = Settings()
 game = Game()
+game.runGame()
