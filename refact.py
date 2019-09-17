@@ -56,11 +56,13 @@ class Settings:
 
     def instantiatePlayers(self):
         self.numberOfPlayers = int(self.numberOfPlayers)
-        name = ''
         players = []
         for player in range(1,self.numberOfPlayers+1):
             name = input(f"+- Player {player}, enter your name: ")
             print('\n')
+            while not name.strip():
+                print('\n You must enter a name! \n')
+                name = input(f"+- Player {player}, enter your name: ")
             if self.numberOfPlayers > 1:
                 while name in [player.name for player in players]:
                     name = input(f'+-+-+- Name already registered -+-+-+\nPlease enter a different name for player {player}: ')
