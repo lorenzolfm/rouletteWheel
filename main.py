@@ -316,3 +316,9 @@ class AmericanRoulette(Roulette):
 players = Players()
 settings = GameSettings()
 game = Game()
+
+
+#Criar parceria com empresas e laboratorios da UFSC
+#Unir pesquisa e iniciativa privada
+#Terceirizar o processo de teste
+#Fundos quantitativos
