@@ -12,6 +12,7 @@ class Game:
         while True:
             for player in self.players:
                 player.setBetAmmount()
+                player.setBetType()
 
 class Settings:
     def __init__(self):
@@ -103,6 +104,27 @@ class Player:
             self.pot -=  self.betAmmount
             if self.roundSkipStreak != 0:
                 self.roundSkipStreak = 0
+
+    def setBetType(self):
+        self.betTypeChoice = None
+        if self.roundSkipStreak == 0:
+            print('\n------------------------------------------------------------------')
+            print(f'{self.name}, Choose your bet type')
+        while self.betTypeChoice not in ['1','2']:
+            self.betTypeChoice = input('Enter 1 to make an INNER Bet - Enter 2 to make an OUTSIDE bet: ')
+        if self.betTypeChoice == '1':
+            self.setInnerBet()
+
+    def setInnerBet(self):
+        self.betId = None
+        #Aqui tem que ter a condicao do tabuleiro americano com 00
+        #HSelect on how many numbers you're gonna bet on
+            #Based on previous choice, display options
+            #Choose
+        while self.betId not in (str(i) for i in range(0,37)):
+            self.betId = input('\nSelect a number between 0 and 36: ')
+            print('------------------------------------------------------------------\n')
+
 
 class Roulette:
     def __init__(self):
