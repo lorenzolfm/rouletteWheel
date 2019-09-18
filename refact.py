@@ -12,7 +12,6 @@ class Game:
         while True:
             for player in self.players:
                 player.setBetAmmount()
-            print(self.players)
 
 class Settings:
     def __init__(self):
