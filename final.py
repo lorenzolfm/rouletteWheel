@@ -21,7 +21,10 @@ class Game:
             self.displayIntro()
             self.setRoulette()
             self.setPlayers()
-            print(self.players)
+            while self.players != []:
+                self.setBets()
+
+                #check to see if remaining players still have any Money
 
     def displayIntro(self):
         print('\n------------------------------------------------')
@@ -38,6 +41,10 @@ class Game:
         self.settings.setNumberOfPlayers()
         self.instantiatePlayers()
 
+    def setBets(self):
+        for player in self.players:
+            player.setBetAmmount()
+
     def instantiateRoulette(self):
         if self.settings.selectedRoulette == '1':
             print(f'\n+-+-+- Ok! Loading the American Roulette -+-+-+\n')
@@ -50,7 +57,7 @@ class Game:
             self.roulette = FrenchRoulette()
 
     def instantiatePlayers(self):
-        self.players = []
+        # self.players = []
         for player in range(1,self.settings.numberOfPlayers+1):
             name = input(f"+- Player {player}, enter your name: ")
             print('\n')
@@ -95,9 +102,38 @@ class Player:
     #Player model
     def __init__(self,name):
         self.name = name
+        self.roundSkipStreak = 0
+        self.pot = 100
+        self.betAmmount = None
 
     def  __repr__(self):
         return f'{self.name}'
+
+    def setBetAmmount(self):
+        self.betAmmount = None
+        if self.pot <= 0:
+            game.players.remove(self)
+        while self.betAmmount not in (str(i) for i in range(0,self.pot+1)):
+            print('\n--------------------------------------------------------')
+            self.betAmmount = input(f"Player: {self.name}\nPot: {self.pot}\nHow much you wanna bet? (enter 0 to skip this round): ")
+            if self.betAmmount not in (str(i) for i in range(0,self.pot+1)):
+                print(f'+-+-+- Please enter a valid input. -+-+-+\n+-+-+- You must choose an integer between 0 and {self.pot} (integers only) -+-+-+\n')
+        if self.betAmmount == '0':
+            self.roundSkipStreak += 1
+            if self.roundSkipStreak >= 3:
+                game.players.remove(self)
+                print('\n------------------------------------------------------------------')
+                print(f"+-+-+- {self.name}, You're out! Skiped 3 rounds in a row! -+-+-+")
+                print('------------------------------------------------------------------\n')
+            else:
+                print(f'+- {self.name} has chosen to skip this round -+\n+- Skips Left before removal: {3-self.roundSkipStreak} -+\n')
+        else:
+            self.betAmmount = int(self.betAmmount)
+            self.pot -= self.betAmmount
+            if self.roundSkipStreak != 0:
+                self.roundSkipStreak = 0
+
+
 
 class Roulette:
     def __init__(self):
