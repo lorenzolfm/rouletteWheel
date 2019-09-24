@@ -149,7 +149,13 @@ class Player:
             self.setOutsideBet()
 
     def setInsideBetType(self):
-        pass
+        #Inner bet will depend on roullete type
+        if isinstance(game.roulette, AmericanRoulette):
+            print('Display American inner bets')
+        elif isinstance(game.roulette, EuropeanRoulette):
+            print('Display European inner bets')
+        else:
+            print('Display French inner bets')
 
     def setOutsideBet(self):
         self.outsideBetId = None
