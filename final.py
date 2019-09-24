@@ -44,6 +44,7 @@ class Game:
     def setBets(self):
         for player in self.players:
             player.setBetAmmount()
+            player.setInOrOutBet()
 
     def instantiateRoulette(self):
         if self.settings.selectedRoulette == '1':
@@ -105,6 +106,8 @@ class Player:
         self.roundSkipStreak = 0
         self.pot = 100
         self.betAmmount = None
+        self.betTypeChoice = None
+        self.outsideBetId = None
 
     def  __repr__(self):
         return f'{self.name}'
@@ -133,7 +136,26 @@ class Player:
             if self.roundSkipStreak != 0:
                 self.roundSkipStreak = 0
 
+    def setInOrOutBet(self):
+        self.betTypeChoice = None
+        if self.roundSkipStreak == 0:
+            print('\n------------------------------------------------------------------')
+            print(f'{self.name}, Choose your bet type')
+        while self.betTypeChoice not in (str(i) for i in range(1,3)):
+            self.betTypeChoice = input('Enter 1 to make an INSIDE Bet - Enter 2 to make an OUTSIDE bet: ')
+        if self.betTypeChoice == '1':
+            self.setInsideBetType()
+        else:
+            self.setOutsideBet()
 
+    def setInsideBetType(self):
+        pass
+
+    def setOutsideBet(self):
+        self.outsideBetId = None
+        while self.outsideBetId not in (str(i) for i in range(1,13)):
+            print('\n------------------------------------------------------------------')
+            self.outsideBetId = input("\n1-Red\n2-Black\n3-Even\n4-Odd\n5-One to Eighteen\n6-Eighteen to Thirty-Six\n7-First 12\n8-Second 12\n9-Third 12\n10-Column 1\n11-Column 2\n12-Column 3\n+-+-+- Select bet category: ")
 
 class Roulette:
     def __init__(self):
