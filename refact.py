@@ -102,7 +102,7 @@ class Player:
         else:
             self.betAmmount = int(self.betAmmount)
             self.pot -=  self.betAmmount
-            if self.roundSkipStreak != 0:
+            if self.roundSkipStreak == 0:
                 self.roundSkipStreak = 0
 
     def setBetType(self):
@@ -113,7 +113,15 @@ class Player:
         while self.betTypeChoice not in ['1','2']:
             self.betTypeChoice = input('Enter 1 to make an INNER Bet - Enter 2 to make an OUTSIDE bet: ')
         if self.betTypeChoice == '1':
-            self.setInnerBet()
+            self.setInnerBetType()
+
+    def setInnerBetType(self):
+        #Condicional pra definir qual é o tipo de tabuleiro, para poder mostrar as opçoes de acordo cok o esperado
+        print("\nSelect inner bet category\n")
+        if isinstance(game.roulette, EuropeanRoulette):
+            print('Entrou')
+        else:
+            print(game.roulette)
 
     def setInnerBet(self):
         self.betId = None
