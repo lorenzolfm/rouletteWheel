@@ -10,8 +10,6 @@ class Game:
     def runGame(self):
         run = True
         #While runGame
-            #Display intro
-            #Define and instantiate roulette class
             #Define player number and instantiate player(s)
             #Sort number
             #For each player:
@@ -22,7 +20,8 @@ class Game:
         while run:
             self.displayIntro()
             self.setRoulette()
-            
+            # self.setPlayers()
+
     def displayIntro(self):
         print('\n------------------------------------------------')
         print("+-+-+- Welcome to Bash Terminal Cassino!-+-+-+\n+-+-+- Let's play a Roulette Game!-+-+-+\n")
@@ -33,7 +32,7 @@ class Game:
     def setRoulette(self):
         self.settings.setRouletteType()
         self.instantiateRoulette()
-        print(self.roulette)
+
 
     def instantiateRoulette(self):
         if self.settings.selectedRoulette == '1':
