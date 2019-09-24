@@ -20,7 +20,8 @@ class Game:
         while run:
             self.displayIntro()
             self.setRoulette()
-            # self.setPlayers()
+            self.setPlayers()
+            print(self.players)
 
     def displayIntro(self):
         print('\n------------------------------------------------')
@@ -33,6 +34,9 @@ class Game:
         self.settings.setRouletteType()
         self.instantiateRoulette()
 
+    def setPlayers(self):
+        self.settings.setNumberOfPlayers()
+        self.instantiatePlayers()
 
     def instantiateRoulette(self):
         if self.settings.selectedRoulette == '1':
@@ -45,6 +49,25 @@ class Game:
             print(f'\n+-+-+- Ok! Loading the French Roulette -+-+-+\n')
             self.roulette = FrenchRoulette()
 
+    def instantiatePlayers(self):
+        self.players = []
+        for player in range(1,self.settings.numberOfPlayers+1):
+            name = input(f"+- Player {player}, enter your name: ")
+            print('\n')
+            while not name.strip():
+                print(' \n+-+-+- You must enter a name! -+-+-+')
+                name = input(f"+- Player {player}, enter your name: ")
+            if self.settings.numberOfPlayers > 1:
+                while name in (player.name for player in self.players):
+                    name = ''
+                    while not name.strip():
+                        name = input(f'+-+-+- Name already registered -+-+-+\nPlease enter a different name for player {player}: ')
+                        print('\n')
+                self.players.append(Player(name))
+            else:
+                self.players.append(Player(name))
+
+
 class Settings:
     #Settings class is used to define game settings (i.e.: Number of players and roullete type)
     def __init__(self):
@@ -52,18 +75,29 @@ class Settings:
         self.numberOfPlayers = None
 
     def setRouletteType(self):
-        while self.selectedRoulette not in ['1','2','3']:
+        while self.selectedRoulette not in (str(i) for i in range(1,4)):
             print('\n------------------------------------------------')
             self.selectedRoulette = input('+- 1-American Roulette -+\n+- 2-European Roueltte -+\n+- 3-French Roulette -+\nSelect game style: ')
             print('------------------------------------------------\n')
             if self.selectedRoulette not in ['1','2','3']:
                 print('\n+- You must select the Roulette by typing 1, 2 or 3 -+\n')
 
+    def setNumberOfPlayers(self):
+        while self.numberOfPlayers not in (str(i) for i in range(1,11)):
+            print('\n---------------------------------------------------')
+            self.numberOfPlayers = input('+- Enter the number of players in this game (1-10): ')
+            print('---------------------------------------------------\n')
+            if self.numberOfPlayers not in (str(i) for i in range(1,11)):
+                print('\nYou must select a number between 1 and 10\n')
+        self.numberOfPlayers = int(self.numberOfPlayers)
 
 class Player:
     #Player model
-    def __init__(self):
-        pass
+    def __init__(self,name):
+        self.name = name
+
+    def  __repr__(self):
+        return f'{self.name}'
 
 class Roulette:
     def __init__(self):
