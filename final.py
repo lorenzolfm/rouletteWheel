@@ -108,6 +108,7 @@ class Player:
         self.betAmmount = None
         self.betTypeChoice = None
         self.outsideBetId = None
+        self.insideBetCategory = None
 
     def  __repr__(self):
         return f'{self.name}'
@@ -149,13 +150,87 @@ class Player:
             self.setOutsideBet()
 
     def setInsideBetType(self):
+        self.insideBetCategory = None
         #Inner bet will depend on roullete type
         if isinstance(game.roulette, AmericanRoulette):
-            print('Display American inner bets')
+            while self.insideBetCategory not in (str(i) for i in range(1,8)):
+                self.insideBetCategory = input('\n1 - Straight/Line\n2 - Split\n3 - Street\n4 - Corner/Square\n5 - Six Line/Double Street\n6 - Trio\n7 - Basket\nWhat type of inside bet you want to make? ')
+                if self.insideBetCategory not in (str(i) for i in range(1,8)):
+                    print('\nYou need to select your bet category by typing a interger (1-7)')
+            #Straight/Single
+            if self.insideBetCategory == '1':
+                pass
+            #Split
+            elif self.insideBetCategory == '2':
+                pass
+            #Street
+            elif self.insideBetCategory == '3':
+                pass
+            #Corner/Square
+            elif self.insideBetCategory == '4':
+                pass
+            #Six Line/Double Street
+            elif self.insideBetCategory == '5':
+                pass
+            #Trio (american)
+            elif self.insideBetCategory == 6'':
+                pass
+            #Baskets
+            else:
+                pass
         elif isinstance(game.roulette, EuropeanRoulette):
-            print('Display European inner bets')
+            while self.insideBetCategory not in (str(i) for i in range(1,8)):
+                self.insideBetCategory = input('\n1 - Straight/Line\n2 - Split\n3 - Street\n4 - Corner/Square\n5 - Six Line/Double Street\n6 - Trio\n7 - First Four\nWhat type of inside bet you want to make? ')
+                if self.insideBetCategory not in (str(i) for i in range(1,8)):
+                    print('\nYou need to select your bet category by typing a interger (1-7)')
+            #Straight/Single
+            if self.insideBetCategory == '1':
+                pass
+            #Split
+            elif self.insideBetCategory == '2':
+                pass
+            #Street
+            elif self.insideBetCategory == '3':
+                pass
+            #Corner/Square
+            elif self.insideBetCategory == '4':
+                pass
+            #Six Line/Double Street
+            elif self.insideBetCategory == '5':
+                pass
+            #Trio (american)
+            elif self.insideBetCategory == '6':
+                pass
+            #First Four
+            else:
+                pass
         else:
-            print('Display French inner bets')
+            while self.insideBetCategory not in (str(i) for i in range(1,8)):
+                self.insideBetCategory = input('\n1 - Straight/Line\n2 - Split\n3 - Street\n4 - Corner/Square\n5 - Six Line/Double Street\n6 - Trio\n7 - First Four\nWhat type of inside bet you want to make? ')
+                if self.insideBetCategory not in (str(i) for i in range(1,8)):
+                    print('\nYou need to select your bet category by typing a interger (1-7)')
+            #Straight/Single
+            if self.insideBetCategory == '1':
+                pass
+            #Split
+            elif self.insideBetCategory == '2':
+                pass
+            #Street
+            elif self.insideBetCategory == '3':
+                pass
+            #Corner/Square
+            elif self.insideBetCategory == '4':
+                pass
+            #Six Line/Double Street
+            elif self.insideBetCategory == '5':
+                pass
+            #Trio (american)
+            elif self.insideBetCategory == '6':
+                pass
+            #First Four
+            else:
+                pass
+
 
     def setOutsideBet(self):
         self.outsideBetId = None
