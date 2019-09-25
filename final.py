@@ -173,7 +173,7 @@ class Player:
             elif self.insideBetCategory == '5':
                 pass
             #Trio (american)
-            elif self.insideBetCategory == 6'':
+            elif self.insideBetCategory == '6':
                 pass
             #Baskets
             else:
