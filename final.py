@@ -28,7 +28,7 @@ class Game:
 
     def displayIntro(self):
         print('\n------------------------------------------------')
-        print("+-+-+- Welcome to Bash Terminal Cassino!-+-+-+\n+-+-+- Let's play a Roulette Game!-+-+-+\n")
+        print("+-+-+- Welcome to Bash Terminal Casino!-+-+-+\n+-+-+- Let's play a Roulette Game!-+-+-+\n")
         print("+- If you don't know how to play this game -+\n+- you can take a look at the readme.txt file -+\n+- for instructions and rules -+\n")
         print("+- You can press CTRL + D at any time to exit -+")
         print('------------------------------------------------\n')
@@ -110,6 +110,7 @@ class Player:
         self.outsideBetId = None
         self.insideBetCategory = None
         self.insideBetChoice = None
+        self.insideBet = None
 
     def  __repr__(self):
         return f'{self.name}'
@@ -146,100 +147,89 @@ class Player:
         while self.betTypeChoice not in (str(i) for i in range(1,3)):
             self.betTypeChoice = input('Enter 1 to make an INSIDE Bet - Enter 2 to make an OUTSIDE bet: ')
         if self.betTypeChoice == '1':
-            self.setInsideBetType()
+            self.setInsideBet()
         else:
             self.setOutsideBet()
 
-    def setInsideBetType(self):
+    def setInsideBet(self):
         self.insideBetCategory = None
-        #Inner bet will depend on roullete type
+        self.insideBet = None
+        self.insideBetChoice = None
         if isinstance(game.roulette, AmericanRoulette):
-            while self.insideBetCategory not in (str(i) for i in range(1,8)):
-                self.insideBetCategory = input('\n1 - Straight/Line\n2 - Split\n3 - Street\n4 - Corner/Square\n5 - Six Line/Double Street\n6 - Trio\n7 - Basket\nWhat type of inside bet you want to make? ')
-                if self.insideBetCategory not in (str(i) for i in range(1,8)):
-                    print('\nYou need to select your bet category by typing a interger (1-7)')
-            #Straight/Single
-            if self.insideBetCategory == '1':
-                #Display options
-                # x = [number['id'] for number in game.roulette.board]
-                # print(x)
+            self.setInsideBetType()
+            self.setInsideGeneralBet()
+            if self.insideBetCategory == '6':
                 pass
-                #Make choice
-            #Split
-            elif self.insideBetCategory == '2':
-                #Display Options
-                insideBetChoices.displayOptions(insideBetChoices.splits)
-                choice = input('Choose your bet: ')
-                #Make Choice
-            #Street
-            elif self.insideBetCategory == '3':
-                insideBetChoices.displayOptions(insideBetChoices.streets)
-            #Corner/Square
-            elif self.insideBetCategory == '4':
-                insideBetChoices.displayOptions(insideBetChoices.squares)
-            #Six Line/Double Street
-            elif self.insideBetCategory == '5':
-                insideBetChoices.displayOptions(insideBetChoices.doubleStreets)
-                choice = input('Choose your bet: ')
-            #Trio (american)
-            elif self.insideBetCategory == '6':
-                pass
-            #Baskets
-            else:
+            elif self.insideBetCategory == '7':
                 pass
         elif isinstance(game.roulette, EuropeanRoulette):
+            self.setInsideBetType()
+            self.setInsideGeneralBet()
+            if self.insideBetCategory == '6':
+                pass
+            elif self.insideBetCategory == '7':
+                pass
+        else:
+            self.setInsideBetType()
+            self.setInsideGeneralBet()
+            if self.insideBetCategory == '6':
+                pass
+            elif self.insideBetCategory == '7':
+                pass
+
+    def setInsideBetType(self):
+        if isinstance(game.roulette, AmericanRoulette):
             while self.insideBetCategory not in (str(i) for i in range(1,8)):
                 self.insideBetCategory = input('\n1 - Straight/Line\n2 - Split\n3 - Street\n4 - Corner/Square\n5 - Six Line/Double Street\n6 - Trio\n7 - First Four\nWhat type of inside bet you want to make? ')
                 if self.insideBetCategory not in (str(i) for i in range(1,8)):
                     print('\nYou need to select your bet category by typing a interger (1-7)')
-            #Straight/Single
-            if self.insideBetCategory == '1':
-                pass
-            #Split
-            elif self.insideBetCategory == '2':
-                insideBetChoices.displayOptions(insideBetChoices.splits)
+        else:
+            while self.insideBetCategory not in (str(i) for i in range(1,7)):
+                self.insideBetCategory = input('\n1 - Straight/Line\n2 - Split\n3 - Street\n4 - Corner/Square\n5 - Six Line/Double Street\n6 - Trio\nWhat type of inside bet you want to make? ')
+                if self.insideBetCategory not in (str(i) for i in range(1,7)):
+                    print('\nYou need to select your bet category by typing a interger (1-6)')
 
-            #Street
-            elif self.insideBetCategory == '3':
-                insideBetChoices.displayOptions(insideBetChoices.streets)
-            #Corner/Square
-            elif self.insideBetCategory == '4':
-                insideBetChoices.displayOptions(insideBetChoices.squares)
-            #Six Line/Double Street
-            elif self.insideBetCategory == '5':
-                insideBetChoices.displayOptions(insideBetChoices.doubleStreets)
-            #Trio (american)
-            elif self.insideBetCategory == '6':
+
+    def setInsideGeneralBet(self):
+        if self.insideBetCategory == '1':
+            options = [number['id'] for number in game.roulette.board]
+            for i in options:
+                print(i)
+            while self.insideBet not in options:
+                self.insideBet = input('Type the number you want to bet on: ')
+            self.insideBet = [self.insideBet]
+            print(self.insideBet)
+        elif self.insideBetCategory == '2':
+            insideBetChoices.displayOptions(insideBetChoices.splits)
+            while self.insideBetChoice not in (str(i) for i in range(56)):
+                self.insideBetChoice = input('Choose the Split: ')
+            self.insideBet = insideBetChoices.splits[int(self.insideBetChoice)]
+            print(self.insideBet)
+        elif self.insideBetCategory == '3':
+            insideBetChoices.displayOptions(insideBetChoices.streets)
+            while self.insideBetChoice not in (str(i) for i in range(12)):
+                self.insideBetChoice = input('Choose the Trio: ')
+            self.insideBet = insideBetChoices.streets[int(self.insideBetChoice)]
+            print(self.insideBet)
+        elif self.insideBetCategory == '4':
+            insideBetChoices.displayOptions(insideBetChoices.squares)
+            while self.insideBetChoice not in (str(i) for i in range(22)):
+                self.insideBetChoice = input('Choose the Square: ')
+            self.insideBet = insideBetChoices.squares[int(self.insideBetChoice)]
+            print(self.insideBet)
+        elif self.insideBetCategory == '5':
+            insideBetChoices.displayOptions(insideBetChoices.doubleStreets)
+            while self.insideBetChoice not in (str(i) for i in range(11)):
+                self.insideBetChoice = input('Choose a Double Street: ')
+            self.insideBet = insideBetChoices.doubleStreets[int(self.insideBetChoice)]
+            print(self.insideBet)
+        elif self.insideBetCategory == '6':
+            if isinstance(game.roulette, AmericanRoulette):
                 pass
-            #First Four
             else:
                 pass
         else:
-            while self.insideBetCategory not in (str(i) for i in range(1,8)):
-                self.insideBetCategory = input('\n1 - Straight/Line\n2 - Split\n3 - Street\n4 - Corner/Square\n5 - Six Line/Double Street\n6 - Trio\n7 - First Four\nWhat type of inside bet you want to make? ')
-                if self.insideBetCategory not in (str(i) for i in range(1,8)):
-                    print('\nYou need to select your bet category by typing a interger (1-7)')
-            #Straight/Single
-            if self.insideBetCategory == '1':
-                pass
-            #Split
-            elif self.insideBetCategory == '2':
-                insideBetChoices.displayOptions(insideBetChoices.splits)
-            #Street
-            elif self.insideBetCategory == '3':
-                insideBetChoices.displayOptions(insideBetChoices.streets)
-            #Corner/Square
-            elif self.insideBetCategory == '4':
-                insideBetChoices.displayOptions(insideBetChoices.squares)
-            #Six Line/Double Street
-            elif self.insideBetCategory == '5':
-                insideBetChoices.displayOptions(insideBetChoices.doubleStreets)
-            #Trio (american)
-            elif self.insideBetCategory == '6':
-                pass
-            #First Four
-            else:
-                pass
+            pass
 
 
     def setOutsideBet(self):
@@ -370,16 +360,16 @@ class FrenchRoulette(Roulette):
 
 class InsideBetChoices:
     def __init__(self):
-        self.splits = [[1,2],[2,3],[4,5],[5,6],[7,8],[8,9],[10,11],[11,12],[13,14],[14,15],[16,17],[17,18],[19,20],[20,21],[22,23],[23,24],[25,26],[26,27],[28,29],[29,30],[31,32],[32,33],[34,35],[35,36],[1,4],[4,7],[7,10],[10,13],[13,16],[19,22],[22,25],[25,28],[28,31],[31,34],[2,5],[5,8],[8,11],[11,14],[14,17],[17,20],[20,23],[23,26],[26,29],[29,32],[32,35],[3,6],[6,9],[9,12],[12,15],[15,18],[18,21],[21,24],[24,27],[27,30],[30,33],[33,36]]
-        self.streets = [[1,2,3],[4,5,6],[7,8,9],[10,11,12],[13,14,15],[16,17,18],[19,20,21],[22,23,24],[25,26,27],[28,29,30],[31,32,33],[34,35,36]]
-        self.squares = [[1,2,4,5],[2,3,5,6],[4,7,5,8],[5,6,7,9],[7,8,10,11],[8,9,11,12],[10,11,13,14],[11,12,14,15],[13,14,16,17],[14,15,17,18],[16,17,19,20],[17,18,20,21],[19,20,22,23],[20,21,23,24],[22,23,25,26],[23,24,26,27],[25,26,28,29],[26,27,29,30],[28,29,31,31],[29,30,32,33],[31,32,34,35],[32,33,35,36]]
-        self.doubleStreets = [[1,2,3,4,5,6],[4,5,6,7,8,9],[7,8,9,10,11,12],[10,11,12,13,14,15],[13,14,15,16,17,18],[16,17,18,19,20,21],[19,20,21,22,23,24],[22,23,24,25,26,27],[25,26,27,28,29,30],[28,29,30,31,32,33],[31,32,33,34,35,36]]
+        self.splits = [['1','2'],['2','3'],['4','5'],['5','6'],['7','8'],['8','9'],['10','11'],['11','12'],['13','14'],['14','15'],['16','17'],['17','18'],['19','20'],['20','21'],['22','23'],['23','24'],['25','26'],['26','27'],['28','29'],['29','30'],['31','32'],['32','33'],['34','35'],['35','36'],['1','4'],['4','7'],['7','10'],['10','13'],['13','16'],['19','22'],['22','25'],['25','28'],['28','31'],['31','34'],['2','5'],['5','8'],['8','11'],['11','14'],['14','17'],['17','20'],['20','23'],['23','26'],['26','29'],['29','32'],['32','35'],['3','6'],['6','9'],['9','12'],['12','15'],['15','18'],['18','21'],['21','24'],['24','27'],['27','30'],['30','33'],['33','36']]
+        self.streets = [['1','2','3'],['4','5','6'],['7','8','9'],['10','11','12'],['13','14','15'],['16','17','18'],['19','20','21'],['22','23','24'],['25','26','27'],['28','29','30'],['31','32','33'],['34','35','36']]
+        self.squares = [['1','2','4','5'],['2','3','5','6'],['4','7','5','8'],['5','6','7','9'],['7','8','10','11'],['8','9','11','12'],['10','11','13','14'],['11','12','14','15'],['13','14','16','17'],['14','15','17','18'],['16','17','19','20'],['17','18','20','21'],['19','20','22','23'],['20','21','23','24'],['22','23','25','26'],['23','24','26','27'],['25','26','28','29'],['26','27','29','30'],['28','29','31','32'],['29','30','32','33'],['31','32','34','35'],['32','33','35','36']]
+        self.doubleStreets = [['1','2','3','4','5','6'],['4','5','6','7','8','9'],['7','8','9','10','11','12'],['10','11','12','13','14','15'],['13','14','15','16','17','18'],['16','17','18','19','20','21'],['19','20','21','22','23','24'],['22','23','24','25','26','27'],['25','26','27','28','290','30'],['28','29','30','31','32','33'],['31','32','33','34','35','36']]
 
     def displayOptions(self,list):
         i = 0
         print('\nThis are your options\n')
         for group in list:
-            print(f'{i}: {group}')
+            print(f'{i}: {[int(i) for i in group]}')
             i+=1
 
 
