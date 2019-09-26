@@ -6,6 +6,8 @@ class Game:
         self.settings = Settings()
         self.roulette = None
         self.players = []
+        self.sortedNumber = None
+        self.playersPlayingRound = []
 
     def runGame(self):
         run = True
@@ -13,8 +15,6 @@ class Game:
             #Define player number and instantiate player(s)
             #Sort number
             #For each player:
-                #setBetAmmount
-                #chooseBet
                 #Check result
                 #Transfer Money
         while run:
@@ -22,7 +22,12 @@ class Game:
             self.setRoulette()
             self.setPlayers()
             while self.players != []:
+                self.sortNumber()
                 self.setBets()
+                # print(f'Jogando: {self.playersPlayingRound}')
+                self.checkBets()
+                self.resetAttrs()
+
 
                 #check to see if remaining players still have any Money
 
@@ -58,7 +63,6 @@ class Game:
             self.roulette = FrenchRoulette()
 
     def instantiatePlayers(self):
-        # self.players = []
         for player in range(1,self.settings.numberOfPlayers+1):
             name = input(f"+- Player {player}, enter your name: ")
             print('\n')
@@ -74,6 +78,27 @@ class Game:
                 self.players.append(Player(name))
             else:
                 self.players.append(Player(name))
+
+    def sortNumber(self):
+        self.sortedNumber = random.choice(self.roulette.board)
+        print(self.sortedNumber)
+
+    def checkBets(self):
+        for player in self.playersPlayingRound:
+            if self.sortedNumber['id'] in player.insideBet:
+                print('ganhou!!!')
+            else:
+                print('perdeuu!!!')
+
+    def resetAttrs(self):
+        for player in self.players:
+            player.betAmmount = None
+            player.outsideBetId = None
+            player.betTypeChoice = None
+            player.insideBetCategory = None
+            player.insideBet = None
+            player.insideBetChoice = None
+        self.playersPlayingRound = []
 
 
 class Settings:
@@ -116,7 +141,6 @@ class Player:
         return f'{self.name}'
 
     def setBetAmmount(self):
-        self.betAmmount = None
         if self.pot <= 0:
             game.players.remove(self)
         while self.betAmmount not in (str(i) for i in range(0,self.pot+1)):
@@ -134,48 +158,34 @@ class Player:
             else:
                 print(f'+- {self.name} has chosen to skip this round -+\n+- Skips Left before removal: {3-self.roundSkipStreak} -+\n')
         else:
+            game.playersPlayingRound.append(self)
+            print(game.playersPlayingRound)
             self.betAmmount = int(self.betAmmount)
             self.pot -= self.betAmmount
             if self.roundSkipStreak != 0:
                 self.roundSkipStreak = 0
 
     def setInOrOutBet(self):
-        self.betTypeChoice = None
         if self.roundSkipStreak == 0:
             print('\n------------------------------------------------------------------')
             print(f'{self.name}, Choose your bet type')
-        while self.betTypeChoice not in (str(i) for i in range(1,3)):
-            self.betTypeChoice = input('Enter 1 to make an INSIDE Bet - Enter 2 to make an OUTSIDE bet: ')
-        if self.betTypeChoice == '1':
-            self.setInsideBet()
-        else:
-            self.setOutsideBet()
+            while self.betTypeChoice not in (str(i) for i in range(1,3)):
+                self.betTypeChoice = input('Enter 1 to make an INSIDE Bet - Enter 2 to make an OUTSIDE bet: ')
+            if self.betTypeChoice == '1':
+                self.setInsideBet()
+            else:
+                self.setOutsideBet()
 
     def setInsideBet(self):
-        self.insideBetCategory = None
-        self.insideBet = None
-        self.insideBetChoice = None
         if isinstance(game.roulette, AmericanRoulette):
             self.setInsideBetType()
             self.setInsideGeneralBet()
-            if self.insideBetCategory == '6':
-                pass
-            elif self.insideBetCategory == '7':
-                pass
         elif isinstance(game.roulette, EuropeanRoulette):
             self.setInsideBetType()
             self.setInsideGeneralBet()
-            if self.insideBetCategory == '6':
-                pass
-            elif self.insideBetCategory == '7':
-                pass
         else:
             self.setInsideBetType()
             self.setInsideGeneralBet()
-            if self.insideBetCategory == '6':
-                pass
-            elif self.insideBetCategory == '7':
-                pass
 
     def setInsideBetType(self):
         if isinstance(game.roulette, AmericanRoulette):
@@ -247,7 +257,6 @@ class Player:
 
     #Need to map function
     def setOutsideBet(self):
-        self.outsideBetId = None
         while self.outsideBetId not in (str(i) for i in range(1,13)):
             print('\n------------------------------------------------------------------')
             self.outsideBetId = input("\n1-Red\n2-Black\n3-Even\n4-Odd\n5-One to Eighteen\n6-Eighteen to Thirty-Six\n7-First 12\n8-Second 12\n9-Third 12\n10-Column 1\n11-Column 2\n12-Column 3\n+-+-+- Select bet category: ")
@@ -257,7 +266,6 @@ class Roulette:
         self.sortedNumber = None
         self.bank = 1000
         self.board = self.setBoard()
-
 
     def setBoard(self):
         self.board = []
