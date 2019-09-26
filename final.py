@@ -26,10 +26,10 @@ class Game:
                 self.setBets()
                 # print(f'Jogando: {self.playersPlayingRound}')
                 self.checkBets()
+                self.doPayments()
+                #check to see if remaining players still have any Money
                 self.resetAttrs()
 
-
-                #check to see if remaining players still have any Money
 
     def displayIntro(self):
         print('\n------------------------------------------------')
@@ -100,7 +100,9 @@ class Game:
             player.insideBetChoice = None
         self.playersPlayingRound = []
 
-
+    def doPayments(self):
+        pass
+        
 class Settings:
     #Settings class is used to define game settings (i.e.: Number of players and roullete type)
     def __init__(self):
