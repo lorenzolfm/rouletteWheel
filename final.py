@@ -224,14 +224,28 @@ class Player:
             self.insideBet = insideBetChoices.doubleStreets[int(self.insideBetChoice)]
             print(self.insideBet)
         elif self.insideBetCategory == '6':
+            choice = 0
             if isinstance(game.roulette, AmericanRoulette):
-                pass
+                while choice not in (str(i) for i in range(1,4)):
+                    choice = input('\n1 - [0,1,2]\n2 - [0,2,3]\n3 - [00,2,3]\nChoose: ')
+                if choice == '1':
+                    self.insideBet = ['0','1','2']
+                elif choice == '2':
+                    self.insideBet = ['0','2','3']
+                else:
+                    self.insideBet = ['00','2','3']
             else:
-                pass
-        else:
-            pass
+                while choice not in (str(i) for i in range(1,3)):
+                    choice = input('\n1 - [0,1,2]\n2 - [0,2,3]\nChoose: ')
+                if choice == '1':
+                    self.insideBet = ['0','1','2']
+                else:
+                    self.insideBet = ['0','2','3']
 
+        if isinstance(game.roulette, AmericanRoulette) and self.insideBetCategory == '7':
+            self.insideBet = ['0','00','1','2','3']
 
+    #Need to map function
     def setOutsideBet(self):
         self.outsideBetId = None
         while self.outsideBetId not in (str(i) for i in range(1,13)):
