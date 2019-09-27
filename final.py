@@ -1,5 +1,7 @@
 import random
-
+#En prison and the other one
+#Bug is comming from multiplier atribute beign defined more than one time per round
+    #Multiplier needs to be a player attribute
 class Game:
     #Game is composed of player(s) and a Roulette child class (american,european,french)
     def __init__(self):
@@ -30,7 +32,6 @@ class Game:
                 #check to see if remaining players still have any Money
                 self.resetAttrs()
 
-
     def displayIntro(self):
         print('\n------------------------------------------------')
         print("+-+-+- Welcome to Bash Terminal Casino!-+-+-+\n+-+-+- Let's play a Roulette Game!-+-+-+\n")
@@ -50,6 +51,7 @@ class Game:
         for player in self.players:
             player.setBetAmmount()
             player.setInOrOutBet()
+            game.
 
     def instantiateRoulette(self):
         if self.settings.selectedRoulette == '1':
@@ -87,11 +89,85 @@ class Game:
         for player in self.playersPlayingRound:
             if player.isInsideBet:
                 if self.sortedNumber['id'] in player.insideBet:
-                    print('ganhou!!!')
+                    player.pot += self.roulette.multiplier*player.betAmmount + player.betAmmount
+                    self.roulette.bank -= self.roulette.multiplier*player.betAmmount
                 else:
                     self.roulette.bank += player.betAmmount
             else:
                 pass
+                if player.outsideBetId == '1':
+                    if self.sortedNumber['red'] == True:
+                        player.pot += self.roulette.multiplier*player.betAmmount + player.betAmmount
+                        self.roulette.bank -= self.roulette.multiplier*player.betAmmount
+                    else:
+                        self.roulette.bank += player.betAmmount
+                elif player.outsideBetId == '2':
+                    if self.sortedNumber['red'] == False:
+                        player.pot += self.roulette.multiplier*player.betAmmount + player.betAmmount
+                        self.roulette.bank -= self.roulette.multiplier*player.betAmmount
+                    else:
+                        self.roulette.bank += player.betAmmount
+                elif player.outsideBetId == '3':
+                    if self.sortedNumber['even'] == True:
+                        player.pot += self.roulette.multiplier*player.betAmmount + player.betAmmount
+                        self.roulette.bank -= self.roulette.multiplier*player.betAmmount
+                    else:
+                        self.roulette.bank += player.betAmmount
+                elif player.outsideBetId == '4':
+                    if self.sortedNumber['even'] == False:
+                        player.pot += self.roulette.multiplier*player.betAmmount + player.betAmmount
+                        self.roulette.bank -= self.roulette.multiplier*player.betAmmount
+                    else:
+                        self.roulette.bank += player.betAmmount
+                elif player.outsideBetId == '5':
+                    if self.sortedNumber['lessOrEqual18'] == True:
+                        player.pot += self.roulette.multiplier*player.betAmmount + player.betAmmount
+                        self.roulette.bank -= self.roulette.multiplier*player.betAmmount
+                    else:
+                        self.roulette.bank += player.betAmmount
+                elif player.outsideBetId == '6':
+                    if self.sortedNumber['lessOrEqual18'] == False:
+                        player.pot += self.roulette.multiplier*player.betAmmount + player.betAmmount
+                        self.roulette.bank -= self.roulette.multiplier*player.betAmmount
+                    else:
+                        self.roulette.bank += player.betAmmount
+                elif player.outsideBetId == '7':
+                    if self.sortedNumber['firstTwelve'] == True:
+                        player.pot += self.roulette.multiplier*player.betAmmount + player.betAmmount
+                        self.roulette.bank -= self.roulette.multiplier*player.betAmmount
+                    else:
+                        self.roulette.bank += player.betAmmount
+                elif player.outsideBetId == '8':
+                    if self.sortedNumber['secondTwelve'] == True:
+                        player.pot += self.roulette.multiplier*player.betAmmount + player.betAmmount
+                        self.roulette.bank -= self.roulette.multiplier*player.betAmmount
+                    else:
+                        self.roulette.bank += player.betAmmount
+                elif player.outsideBetId == '9':
+                    if self.sortedNumber['thirdTwelve'] == True:
+                        player.pot += self.roulette.multiplier*player.betAmmount + player.betAmmount
+                        self.roulette.bank -= self.roulette.multiplier*player.betAmmount
+                    else:
+                        self.roulette.bank += player.betAmmount
+                elif player.outsideBetId == '10':
+                    if self.sortedNumber['firstColumn'] == True:
+                        player.pot += self.roulette.multiplier*player.betAmmount + player.betAmmount
+                        self.roulette.bank -= self.roulette.multiplier*player.betAmmount
+                    else:
+                        self.roulette.bank += player.betAmmount
+                elif player.outsideBetId == '11':
+                    if self.sortedNumber['secondColumn'] == True:
+                        player.pot += self.roulette.multiplier*player.betAmmount + player.betAmmount
+                        self.roulette.bank -= self.roulette.multiplier*player.betAmmount
+                    else:
+                        self.roulette.bank += player.betAmmount
+                else:
+                    if self.sortedNumber['thirdColumn'] == True:
+                        player.pot += self.roulette.multiplier*player.betAmmount + player.betAmmount
+                        self.roulette.bank -= self.roulette.multiplier*player.betAmmount
+                    else:
+                        self.roulette.bank += player.betAmmount
+
 
     def resetAttrs(self):
         for player in self.players:
@@ -132,7 +208,6 @@ class Settings:
         self.numberOfPlayers = int(self.numberOfPlayers)
 
 class Player:
-    #Player model
     def __init__(self,name):
         self.name = name
         self.roundSkipStreak = 0
@@ -254,6 +329,7 @@ class Player:
             if isinstance(game.roulette, AmericanRoulette):
                 while choice not in (str(i) for i in range(1,4)):
                     choice = input('\n1 - [0,1,2]\n2 - [0,2,3]\n3 - [00,2,3]\nChoose: ')
+                game.roulette.multiplier = 12
                 if choice == '1':
                     self.insideBet = ['0','1','2']
                 elif choice == '2':
@@ -263,6 +339,7 @@ class Player:
             else:
                 while choice not in (str(i) for i in range(1,3)):
                     choice = input('\n1 - [0,1,2]\n2 - [0,2,3]\nChoose: ')
+                game.roulette.multiplier = 12
                 if choice == '1':
                     self.insideBet = ['0','1','2']
                 else:
@@ -271,10 +348,10 @@ class Player:
         else:
             if isinstance(game.roulette, AmericanRoulette):
                 self.insideBet = ['0','00','1','2','3']
-                self.multiplier = 6
+                gameroulette.multiplier = 6
             else:
                 self.insideBet = ['0','1','2','3']
-                self.multiplier = 8
+                game.roulette.multiplier = 8
 
     #Need to map function
     def setOutsideBet(self):
@@ -285,7 +362,7 @@ class Player:
             self.multiplier = 1
         else:
             self.multiplier = 2
-            
+
 class Roulette:
     def __init__(self):
         self.sortedNumber = None
