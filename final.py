@@ -85,10 +85,13 @@ class Game:
 
     def checkBets(self):
         for player in self.playersPlayingRound:
-            if self.sortedNumber['id'] in player.insideBet:
-                print('ganhou!!!')
+            if player.isInsideBet:
+                if self.sortedNumber['id'] in player.insideBet:
+                    print('ganhou!!!')
+                else:
+                    self.roulette.bank += player.betAmmount
             else:
-                print('perdeuu!!!')
+                pass
 
     def resetAttrs(self):
         for player in self.players:
@@ -98,11 +101,13 @@ class Game:
             player.insideBetCategory = None
             player.insideBet = None
             player.insideBetChoice = None
+            self.isInsideBet = False
         self.playersPlayingRound = []
+        self.roulette.multiplier = None
 
     def doPayments(self):
         pass
-        
+
 class Settings:
     #Settings class is used to define game settings (i.e.: Number of players and roullete type)
     def __init__(self):
@@ -138,6 +143,7 @@ class Player:
         self.insideBetCategory = None
         self.insideBetChoice = None
         self.insideBet = None
+        self.isInsideBet = False
 
     def  __repr__(self):
         return f'{self.name}'
@@ -179,6 +185,7 @@ class Player:
                 self.setOutsideBet()
 
     def setInsideBet(self):
+        self.isInsideBet = True
         if isinstance(game.roulette, AmericanRoulette):
             self.setInsideBetType()
             self.setInsideGeneralBet()
@@ -210,30 +217,37 @@ class Player:
             while self.insideBet not in options:
                 self.insideBet = input('Type the number you want to bet on: ')
             self.insideBet = [self.insideBet]
+            game.roulette.multiplier = 35
+            #Delete the print statements
+            print(f'Multiplier: {game.roulette.multiplier}')
             print(self.insideBet)
         elif self.insideBetCategory == '2':
             insideBetChoices.displayOptions(insideBetChoices.splits)
             while self.insideBetChoice not in (str(i) for i in range(56)):
                 self.insideBetChoice = input('Choose the Split: ')
             self.insideBet = insideBetChoices.splits[int(self.insideBetChoice)]
+            game.roulette.multiplier = 17
             print(self.insideBet)
         elif self.insideBetCategory == '3':
             insideBetChoices.displayOptions(insideBetChoices.streets)
             while self.insideBetChoice not in (str(i) for i in range(12)):
                 self.insideBetChoice = input('Choose the Trio: ')
             self.insideBet = insideBetChoices.streets[int(self.insideBetChoice)]
+            game.roulette.multiplier = 11
             print(self.insideBet)
         elif self.insideBetCategory == '4':
             insideBetChoices.displayOptions(insideBetChoices.squares)
             while self.insideBetChoice not in (str(i) for i in range(22)):
                 self.insideBetChoice = input('Choose the Square: ')
             self.insideBet = insideBetChoices.squares[int(self.insideBetChoice)]
+            game.roulette.multiplier = 8
             print(self.insideBet)
         elif self.insideBetCategory == '5':
             insideBetChoices.displayOptions(insideBetChoices.doubleStreets)
             while self.insideBetChoice not in (str(i) for i in range(11)):
                 self.insideBetChoice = input('Choose a Double Street: ')
             self.insideBet = insideBetChoices.doubleStreets[int(self.insideBetChoice)]
+            game.roulette.multiplier = 5
             print(self.insideBet)
         elif self.insideBetCategory == '6':
             choice = 0
@@ -254,20 +268,30 @@ class Player:
                 else:
                     self.insideBet = ['0','2','3']
 
-        if isinstance(game.roulette, AmericanRoulette) and self.insideBetCategory == '7':
-            self.insideBet = ['0','00','1','2','3']
+        else:
+            if isinstance(game.roulette, AmericanRoulette):
+                self.insideBet = ['0','00','1','2','3']
+                self.multiplier = 6
+            else:
+                self.insideBet = ['0','1','2','3']
+                self.multiplier = 8
 
     #Need to map function
     def setOutsideBet(self):
         while self.outsideBetId not in (str(i) for i in range(1,13)):
             print('\n------------------------------------------------------------------')
             self.outsideBetId = input("\n1-Red\n2-Black\n3-Even\n4-Odd\n5-One to Eighteen\n6-Eighteen to Thirty-Six\n7-First 12\n8-Second 12\n9-Third 12\n10-Column 1\n11-Column 2\n12-Column 3\n+-+-+- Select bet category: ")
-
+        if int(self.outsideBetId) <= 6:
+            self.multiplier = 1
+        else:
+            self.multiplier = 2
+            
 class Roulette:
     def __init__(self):
         self.sortedNumber = None
         self.bank = 1000
         self.board = self.setBoard()
+        self.multiplier = None
 
     def setBoard(self):
         self.board = []
