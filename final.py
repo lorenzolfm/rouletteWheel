@@ -1,7 +1,4 @@
 import random
-#En prison and the other one
-#Bug is comming from multiplier atribute beign defined more than one time per round
-    #Multiplier needs to be a player attribute
 class Game:
     #Game is composed of player(s) and a Roulette child class (american,european,french)
     def __init__(self):
@@ -13,12 +10,6 @@ class Game:
 
     def runGame(self):
         run = True
-        #While runGame
-            #Define player number and instantiate player(s)
-            #Sort number
-            #For each player:
-                #Check result
-                #Transfer Money
         while run:
             self.displayIntro()
             self.setRoulette()
@@ -26,11 +17,14 @@ class Game:
             while self.players != []:
                 self.sortNumber()
                 self.setBets()
-                # print(f'Jogando: {self.playersPlayingRound}')
                 self.checkBets()
-                self.doPayments()
-                #check to see if remaining players still have any Money
+                self.displayResults()
+                if self.roulette.bank <= 0 :
+                    print("Oh no, your out of money. Thanks for playing")
+                    self.players = []
+                    run = False
                 self.resetAttrs()
+
 
     def displayIntro(self):
         print('\n------------------------------------------------')
@@ -51,7 +45,6 @@ class Game:
         for player in self.players:
             player.setBetAmmount()
             player.setInOrOutBet()
-            game.
 
     def instantiateRoulette(self):
         if self.settings.selectedRoulette == '1':
@@ -89,84 +82,91 @@ class Game:
         for player in self.playersPlayingRound:
             if player.isInsideBet:
                 if self.sortedNumber['id'] in player.insideBet:
-                    player.pot += self.roulette.multiplier*player.betAmmount + player.betAmmount
-                    self.roulette.bank -= self.roulette.multiplier*player.betAmmount
+                    player.pot += player.betMultiplier*player.betAmmount + player.betAmmount
+                    self.roulette.bank -= player.betMultiplier*player.betAmmount
                 else:
                     self.roulette.bank += player.betAmmount
             else:
                 pass
                 if player.outsideBetId == '1':
                     if self.sortedNumber['red'] == True:
-                        player.pot += self.roulette.multiplier*player.betAmmount + player.betAmmount
-                        self.roulette.bank -= self.roulette.multiplier*player.betAmmount
+                        player.pot += player.betMultiplier*player.betAmmount + player.betAmmount
+                        self.roulette.bank -= player.betMultiplier*player.betAmmount
                     else:
                         self.roulette.bank += player.betAmmount
                 elif player.outsideBetId == '2':
                     if self.sortedNumber['red'] == False:
-                        player.pot += self.roulette.multiplier*player.betAmmount + player.betAmmount
-                        self.roulette.bank -= self.roulette.multiplier*player.betAmmount
+                        player.pot += player.betMultiplier*player.betAmmount + player.betAmmount
+                        self.roulette.bank -= player.betMultiplier*player.betAmmount
                     else:
                         self.roulette.bank += player.betAmmount
                 elif player.outsideBetId == '3':
                     if self.sortedNumber['even'] == True:
-                        player.pot += self.roulette.multiplier*player.betAmmount + player.betAmmount
-                        self.roulette.bank -= self.roulette.multiplier*player.betAmmount
+                        player.pot += player.betMultiplier*player.betAmmount + player.betAmmount
+                        self.roulette.bank -= player.betMultiplier*player.betAmmount
                     else:
                         self.roulette.bank += player.betAmmount
                 elif player.outsideBetId == '4':
                     if self.sortedNumber['even'] == False:
-                        player.pot += self.roulette.multiplier*player.betAmmount + player.betAmmount
-                        self.roulette.bank -= self.roulette.multiplier*player.betAmmount
+                        player.pot += player.betMultiplier*player.betAmmount + player.betAmmount
+                        self.roulette.bank -= player.betMultiplier*player.betAmmount
                     else:
                         self.roulette.bank += player.betAmmount
                 elif player.outsideBetId == '5':
                     if self.sortedNumber['lessOrEqual18'] == True:
-                        player.pot += self.roulette.multiplier*player.betAmmount + player.betAmmount
-                        self.roulette.bank -= self.roulette.multiplier*player.betAmmount
+                        player.pot += player.betMultiplier*player.betAmmount + player.betAmmount
+                        self.roulette.bank -= player.betMultiplier*player.betAmmount
                     else:
                         self.roulette.bank += player.betAmmount
                 elif player.outsideBetId == '6':
                     if self.sortedNumber['lessOrEqual18'] == False:
-                        player.pot += self.roulette.multiplier*player.betAmmount + player.betAmmount
-                        self.roulette.bank -= self.roulette.multiplier*player.betAmmount
+                        player.pot += player.betMultiplier*player.betAmmount + player.betAmmount
+                        self.roulette.bank -= player.betMultiplier*player.betAmmount
                     else:
                         self.roulette.bank += player.betAmmount
                 elif player.outsideBetId == '7':
                     if self.sortedNumber['firstTwelve'] == True:
-                        player.pot += self.roulette.multiplier*player.betAmmount + player.betAmmount
-                        self.roulette.bank -= self.roulette.multiplier*player.betAmmount
+                        player.pot += player.betMultiplier*player.betAmmount + player.betAmmount
+                        self.roulette.bank -= player.betMultiplier*player.betAmmount
                     else:
                         self.roulette.bank += player.betAmmount
                 elif player.outsideBetId == '8':
                     if self.sortedNumber['secondTwelve'] == True:
-                        player.pot += self.roulette.multiplier*player.betAmmount + player.betAmmount
-                        self.roulette.bank -= self.roulette.multiplier*player.betAmmount
+                        player.pot += player.betMultiplier*player.betAmmount + player.betAmmount
+                        self.roulette.bank -= player.betMultiplier*player.betAmmount
                     else:
                         self.roulette.bank += player.betAmmount
                 elif player.outsideBetId == '9':
                     if self.sortedNumber['thirdTwelve'] == True:
-                        player.pot += self.roulette.multiplier*player.betAmmount + player.betAmmount
-                        self.roulette.bank -= self.roulette.multiplier*player.betAmmount
+                        player.pot += player.betMultiplier*player.betAmmount + player.betAmmount
+                        self.roulette.bank -= player.betMultiplier*player.betAmmount
                     else:
                         self.roulette.bank += player.betAmmount
                 elif player.outsideBetId == '10':
                     if self.sortedNumber['firstColumn'] == True:
-                        player.pot += self.roulette.multiplier*player.betAmmount + player.betAmmount
-                        self.roulette.bank -= self.roulette.multiplier*player.betAmmount
+                        player.pot += player.betMultiplier*player.betAmmount + player.betAmmount
+                        self.roulette.bank -= player.betMultiplier*player.betAmmount
                     else:
                         self.roulette.bank += player.betAmmount
                 elif player.outsideBetId == '11':
                     if self.sortedNumber['secondColumn'] == True:
-                        player.pot += self.roulette.multiplier*player.betAmmount + player.betAmmount
-                        self.roulette.bank -= self.roulette.multiplier*player.betAmmount
+                        player.pot += player.betMultiplier*player.betAmmount + player.betAmmount
+                        self.roulette.bank -= player.betMultiplier*player.betAmmount
                     else:
                         self.roulette.bank += player.betAmmount
                 else:
                     if self.sortedNumber['thirdColumn'] == True:
-                        player.pot += self.roulette.multiplier*player.betAmmount + player.betAmmount
-                        self.roulette.bank -= self.roulette.multiplier*player.betAmmount
+                        player.pot += player.betMultiplier*player.betAmmount + player.betAmmount
+                        self.roulette.bank -= player.betMultiplier*player.betAmmount
                     else:
                         self.roulette.bank += player.betAmmount
+
+    def displayResults(self):
+        print('\n------------------------------------------------')
+        print(f'Money in casino bank: R${self.roulette.bank}')
+        for player in self.players:
+            print(f'Player: {player.name}; Pot {player.pot}; Remaining skips: {3 - player.roundSkipStreak}')
+        print('------------------------------------------------\n')
 
 
     def resetAttrs(self):
@@ -177,12 +177,12 @@ class Game:
             player.insideBetCategory = None
             player.insideBet = None
             player.insideBetChoice = None
-            self.isInsideBet = False
+            player.isInsideBet = False
+            player.betMultiplier = None
         self.playersPlayingRound = []
-        self.roulette.multiplier = None
 
-    def doPayments(self):
-        pass
+    # def doPayments(self):
+    #     pass
 
 class Settings:
     #Settings class is used to define game settings (i.e.: Number of players and roullete type)
@@ -219,6 +219,7 @@ class Player:
         self.insideBetChoice = None
         self.insideBet = None
         self.isInsideBet = False
+        self.betMultiplier = None
 
     def  __repr__(self):
         return f'{self.name}'
@@ -226,30 +227,32 @@ class Player:
     def setBetAmmount(self):
         if self.pot <= 0:
             game.players.remove(self)
-        while self.betAmmount not in (str(i) for i in range(0,self.pot+1)):
-            print('\n--------------------------------------------------------')
-            self.betAmmount = input(f"Player: {self.name}\nPot: {self.pot}\nHow much you wanna bet? (enter 0 to skip this round): ")
-            if self.betAmmount not in (str(i) for i in range(0,self.pot+1)):
-                print(f'+-+-+- Please enter a valid input. -+-+-+\n+-+-+- You must choose an integer between 0 and {self.pot} (integers only) -+-+-+\n')
-        if self.betAmmount == '0':
-            self.roundSkipStreak += 1
-            if self.roundSkipStreak >= 3:
-                game.players.remove(self)
-                print('\n------------------------------------------------------------------')
-                print(f"+-+-+- {self.name}, You're out! Skiped 3 rounds in a row! -+-+-+")
-                print('------------------------------------------------------------------\n')
-            else:
-                print(f'+- {self.name} has chosen to skip this round -+\n+- Skips Left before removal: {3-self.roundSkipStreak} -+\n')
+            print(f'Player {self.name} removed from game')
         else:
-            game.playersPlayingRound.append(self)
-            print(game.playersPlayingRound)
-            self.betAmmount = int(self.betAmmount)
-            self.pot -= self.betAmmount
-            if self.roundSkipStreak != 0:
-                self.roundSkipStreak = 0
+            while self.betAmmount not in (str(i) for i in range(0,self.pot+1)):
+                print('\n--------------------------------------------------------')
+                self.betAmmount = input(f"Player: {self.name}\nPot: {self.pot}\nHow much you wanna bet? (enter 0 to skip this round): ")
+                if self.betAmmount not in (str(i) for i in range(0,self.pot+1)):
+                    print(f'+-+-+- Please enter a valid input. -+-+-+\n+-+-+- You must choose an integer between 0 and {self.pot} (integers only) -+-+-+\n')
+            if self.betAmmount == '0':
+                self.roundSkipStreak += 1
+                if self.roundSkipStreak >= 3:
+                    game.players.remove(self)
+                    print('\n------------------------------------------------------------------')
+                    print(f"+-+-+- {self.name}, You're out! Skiped 3 rounds in a row! -+-+-+")
+                    print('------------------------------------------------------------------\n')
+                else:
+                    print(f'+- {self.name} has chosen to skip this round -+\n+- Skips Left before removal: {3-self.roundSkipStreak} -+\n')
+            else:
+                game.playersPlayingRound.append(self)
+                print(game.playersPlayingRound)
+                self.betAmmount = int(self.betAmmount)
+                self.pot -= self.betAmmount
+                if self.roundSkipStreak != 0:
+                    self.roundSkipStreak = 0
 
     def setInOrOutBet(self):
-        if self.roundSkipStreak == 0:
+        if self.roundSkipStreak == 0 and self in game.playersPlayingRound:
             print('\n------------------------------------------------------------------')
             print(f'{self.name}, Choose your bet type')
             while self.betTypeChoice not in (str(i) for i in range(1,3)):
@@ -292,44 +295,44 @@ class Player:
             while self.insideBet not in options:
                 self.insideBet = input('Type the number you want to bet on: ')
             self.insideBet = [self.insideBet]
-            game.roulette.multiplier = 35
+            self.betMultiplier = 35
             #Delete the print statements
-            print(f'Multiplier: {game.roulette.multiplier}')
+            print(f'Multiplier: {self.betMultiplier}')
             print(self.insideBet)
         elif self.insideBetCategory == '2':
             insideBetChoices.displayOptions(insideBetChoices.splits)
             while self.insideBetChoice not in (str(i) for i in range(56)):
                 self.insideBetChoice = input('Choose the Split: ')
             self.insideBet = insideBetChoices.splits[int(self.insideBetChoice)]
-            game.roulette.multiplier = 17
+            self.betMultiplier = 17
             print(self.insideBet)
         elif self.insideBetCategory == '3':
             insideBetChoices.displayOptions(insideBetChoices.streets)
             while self.insideBetChoice not in (str(i) for i in range(12)):
                 self.insideBetChoice = input('Choose the Trio: ')
             self.insideBet = insideBetChoices.streets[int(self.insideBetChoice)]
-            game.roulette.multiplier = 11
+            self.betMultiplier = 11
             print(self.insideBet)
         elif self.insideBetCategory == '4':
             insideBetChoices.displayOptions(insideBetChoices.squares)
             while self.insideBetChoice not in (str(i) for i in range(22)):
                 self.insideBetChoice = input('Choose the Square: ')
             self.insideBet = insideBetChoices.squares[int(self.insideBetChoice)]
-            game.roulette.multiplier = 8
+            self.betMultiplier = 8
             print(self.insideBet)
         elif self.insideBetCategory == '5':
             insideBetChoices.displayOptions(insideBetChoices.doubleStreets)
             while self.insideBetChoice not in (str(i) for i in range(11)):
                 self.insideBetChoice = input('Choose a Double Street: ')
             self.insideBet = insideBetChoices.doubleStreets[int(self.insideBetChoice)]
-            game.roulette.multiplier = 5
+            self.betMultiplier = 5
             print(self.insideBet)
         elif self.insideBetCategory == '6':
             choice = 0
             if isinstance(game.roulette, AmericanRoulette):
                 while choice not in (str(i) for i in range(1,4)):
                     choice = input('\n1 - [0,1,2]\n2 - [0,2,3]\n3 - [00,2,3]\nChoose: ')
-                game.roulette.multiplier = 12
+                self.betMultiplier = 12
                 if choice == '1':
                     self.insideBet = ['0','1','2']
                 elif choice == '2':
@@ -339,7 +342,7 @@ class Player:
             else:
                 while choice not in (str(i) for i in range(1,3)):
                     choice = input('\n1 - [0,1,2]\n2 - [0,2,3]\nChoose: ')
-                game.roulette.multiplier = 12
+                self.betMultiplier = 12
                 if choice == '1':
                     self.insideBet = ['0','1','2']
                 else:
@@ -351,7 +354,7 @@ class Player:
                 gameroulette.multiplier = 6
             else:
                 self.insideBet = ['0','1','2','3']
-                game.roulette.multiplier = 8
+                self.betMultiplier = 8
 
     #Need to map function
     def setOutsideBet(self):
@@ -359,9 +362,9 @@ class Player:
             print('\n------------------------------------------------------------------')
             self.outsideBetId = input("\n1-Red\n2-Black\n3-Even\n4-Odd\n5-One to Eighteen\n6-Eighteen to Thirty-Six\n7-First 12\n8-Second 12\n9-Third 12\n10-Column 1\n11-Column 2\n12-Column 3\n+-+-+- Select bet category: ")
         if int(self.outsideBetId) <= 6:
-            self.multiplier = 1
+            self.betMultiplier = 1
         else:
-            self.multiplier = 2
+            self.Multiplier = 2
 
 class Roulette:
     def __init__(self):
