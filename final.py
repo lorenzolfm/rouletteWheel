@@ -1,4 +1,15 @@
 import random
+#La partage and En prison only affects even bets
+#La partage:  if sorted = 0 and no winner:
+                #take half of the money of each player for the bank (if bet is even)
+                #give back the other half to each player
+#En prison:   if sorted = 0 and no winner:
+                #If bet is even
+                #Play again
+                #If wins:
+                    #Give back bet
+                #else:
+                    #take bet money
 class Game:
     #Game is composed of player(s) and a Roulette child class (american,european,french)
     def __init__(self):
@@ -482,6 +493,7 @@ class EuropeanRoulette(Roulette):
 class FrenchRoulette(Roulette):
     def __init__(self):
         super().__init__()
+        #Set attribute for choosing between la partage and en prison rules
 
     def __repr__(self):
         return 'French Roulette'
