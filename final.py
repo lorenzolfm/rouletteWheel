@@ -1,15 +1,5 @@
 import random
-#La partage and En prison only affects even bets
-#La partage:  if sorted = 0 and no winner:
-                #take half of the money of each player for the bank (if bet is even)
-                #give back the other half to each player
-#En prison:   if sorted = 0 and no winner:
-                #If bet is even
-                #Play again
-                #If wins:
-                    #Give back bet
-                #else:
-                    #take bet money
+
 class Game:
     #Game is composed of player(s) and a Roulette child class (american,european,french)
     def __init__(self):
@@ -18,6 +8,7 @@ class Game:
         self.players = []
         self.sortedNumber = None
         self.playersPlayingRound = []
+        self.winner = False
 
     def runGame(self):
         run = True
@@ -86,9 +77,7 @@ class Game:
                 self.players.append(Player(name))
 
     def sortNumber(self):
-        # self.sortedNumber = random.choice(self.roulette.board)
-        self.sortedNumber = self.roulette.board[0]
-        print(self.sortedNumber)
+        self.sortedNumber = random.choice(self.roulette.board)
 
     def redistributeMoney(self):
         for player in self.playersPlayingRound:
@@ -173,29 +162,44 @@ class Game:
                     else:
                         self.roulette.bank += player.betAmmount
 
+
+    def checkIfWinner(self):
+        for player in self.playersPlayingRound:
+            #tem que checar se nao ganhou na outside bet tambem
+            if player.isInsideBet:
+                if self.sortedNumber['id'] in player.insideBet:
+                    self.winner = True
+    def laPartage(self):
+        if self.winner == False:
+            print('\nLa Partage! Splitting even bets between players and bank!\n')
+            for player in self.playersPlayingRound:
+                if player.betAmmount % 2 == 0:
+                    self.roulette.bank += int((player.betAmmount)/2)
+                    player.pot += int((player.betAmmount)/2)
+        else:
+            self.redistributeMoney()
+
+    def enPrison(self):
+        if self.winner == False:
+            print('\nEn Prison! Locking bets and spinning the roulette again!\n')
+            self.sortNumber()
+            self.checkBets()
+
     def checkBets(self):
-        winner = False
         if self.sortedNumber['id'] == '0' and isinstance(self.roulette, FrenchRoulette):
             if self.roulette.laPartage == True:
-                for player in self.playersPlayingRound:
-                    #tem que checar se nao ganhou na outside bet tambem
-                    if player.isInsideBet:
-                        if self.sortedNumber['id'] in player.insideBet:
-                            winner = True
-                if winner == False:
-                    print('entrou')
-                    for player in self.playersPlayingRound:
-                        if player.betAmmount % 2 == 0:
-                            print(int((player.betAmmount)/2))
-                            self.roulette.bank += int((player.betAmmount)/2)
-                            player.pot += int((player.betAmmount)/2)
-                else:
-                    self.redistributeMoney()
+                self.checkIfWinner()
+                self.laPartage()
+            else:
+                #En prison
+                self.checkIfWinner()
+                self.enPrison()
         else:
             self.redistributeMoney()
 
     def displayResults(self):
         print('\n------------------------------------------------')
+        print(f'Sorted number: {self.sortedNumber["id"]}')
         print(f'Money in casino bank: R${self.roulette.bank}')
         for player in self.players:
             print(f'Player: {player.name}; Pot {player.pot}; Remaining skips: {3 - player.roundSkipStreak}')
@@ -213,6 +217,7 @@ class Game:
             player.isInsideBet = False
             player.betMultiplier = None
         self.playersPlayingRound = []
+        self.winner = False
 
 
 class Settings:
@@ -276,7 +281,6 @@ class Player:
                     print(f'+- {self.name} has chosen to skip this round -+\n+- Skips Left before removal: {3-self.roundSkipStreak} -+\n')
             else:
                 game.playersPlayingRound.append(self)
-                print(game.playersPlayingRound)
                 self.betAmmount = int(self.betAmmount)
                 self.pot -= self.betAmmount
                 if self.roundSkipStreak != 0:
@@ -328,36 +332,30 @@ class Player:
             self.insideBet = [self.insideBet]
             self.betMultiplier = 35
             #Delete the print statements
-            print(f'Multiplier: {self.betMultiplier}')
-            print(self.insideBet)
         elif self.insideBetCategory == '2':
             insideBetChoices.displayOptions(insideBetChoices.splits)
             while self.insideBetChoice not in (str(i) for i in range(56)):
                 self.insideBetChoice = input('Choose the Split: ')
             self.insideBet = insideBetChoices.splits[int(self.insideBetChoice)]
             self.betMultiplier = 17
-            print(self.insideBet)
         elif self.insideBetCategory == '3':
             insideBetChoices.displayOptions(insideBetChoices.streets)
             while self.insideBetChoice not in (str(i) for i in range(12)):
                 self.insideBetChoice = input('Choose the Trio: ')
             self.insideBet = insideBetChoices.streets[int(self.insideBetChoice)]
             self.betMultiplier = 11
-            print(self.insideBet)
         elif self.insideBetCategory == '4':
             insideBetChoices.displayOptions(insideBetChoices.squares)
             while self.insideBetChoice not in (str(i) for i in range(22)):
                 self.insideBetChoice = input('Choose the Square: ')
             self.insideBet = insideBetChoices.squares[int(self.insideBetChoice)]
             self.betMultiplier = 8
-            print(self.insideBet)
         elif self.insideBetCategory == '5':
             insideBetChoices.displayOptions(insideBetChoices.doubleStreets)
             while self.insideBetChoice not in (str(i) for i in range(11)):
                 self.insideBetChoice = input('Choose a Double Street: ')
             self.insideBet = insideBetChoices.doubleStreets[int(self.insideBetChoice)]
             self.betMultiplier = 5
-            print(self.insideBet)
         elif self.insideBetCategory == '6':
             choice = 0
             if isinstance(game.roulette, AmericanRoulette):
@@ -378,7 +376,6 @@ class Player:
                     self.insideBet = ['0','1','2']
                 else:
                     self.insideBet = ['0','2','3']
-
         else:
             if isinstance(game.roulette, AmericanRoulette):
                 self.insideBet = ['0','00','1','2','3']
