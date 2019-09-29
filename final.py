@@ -192,8 +192,6 @@ class Game:
             player.betMultiplier = None
         self.playersPlayingRound = []
 
-    # def doPayments(self):
-    #     pass
 
 class Settings:
     #Settings class is used to define game settings (i.e.: Number of players and roullete type)
@@ -493,6 +491,13 @@ class EuropeanRoulette(Roulette):
 class FrenchRoulette(Roulette):
     def __init__(self):
         super().__init__()
+        self.laPartage = None
+        while self.laPartage not in (str(i) for i in range(1,3)):
+            self.laPartage = input('Press 1 to play by La Partage rules, Press 2 to play by En Prison rules: ')
+        if self.laPartage == '1':
+            self.laPartage = True
+        else:
+            self.laPartage = False
         #Set attribute for choosing between la partage and en prison rules
 
     def __repr__(self):
