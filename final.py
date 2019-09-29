@@ -31,7 +31,6 @@ class Game:
     def displayIntro(self):
         print('\n------------------------------------------------')
         print("+-+-+- Welcome to Bash Terminal Casino!-+-+-+\n+-+-+- Let's play a Roulette Game!-+-+-+\n")
-        print("+- If you don't know how to play this game -+\n+- you can take a look at the readme.txt file -+\n+- for instructions and rules -+\n")
         print("+- You can press CTRL + D at any time to exit -+")
         print('------------------------------------------------\n')
 
@@ -227,6 +226,7 @@ class Settings:
         self.numberOfPlayers = None
 
     def setRouletteType(self):
+        self.selectedRoulette = None
         while self.selectedRoulette not in (str(i) for i in range(1,4)):
             print('\n------------------------------------------------')
             self.selectedRoulette = input('+- 1-American Roulette -+\n+- 2-European Roueltte -+\n+- 3-French Roulette -+\nSelect game style: ')
