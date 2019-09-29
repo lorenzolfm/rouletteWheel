@@ -86,10 +86,11 @@ class Game:
                 self.players.append(Player(name))
 
     def sortNumber(self):
-        self.sortedNumber = random.choice(self.roulette.board)
+        # self.sortedNumber = random.choice(self.roulette.board)
+        self.sortedNumber = self.roulette.board[0]
         print(self.sortedNumber)
 
-    def checkBets(self):
+    def redistributeMoney(self):
         for player in self.playersPlayingRound:
             if player.isInsideBet:
                 if self.sortedNumber['id'] in player.insideBet:
@@ -171,6 +172,27 @@ class Game:
                         self.roulette.bank -= player.betMultiplier*player.betAmmount
                     else:
                         self.roulette.bank += player.betAmmount
+
+    def checkBets(self):
+        winner = False
+        if self.sortedNumber['id'] == '0' and isinstance(self.roulette, FrenchRoulette):
+            if self.roulette.laPartage == True:
+                for player in self.playersPlayingRound:
+                    #tem que checar se nao ganhou na outside bet tambem
+                    if player.isInsideBet:
+                        if self.sortedNumber['id'] in player.insideBet:
+                            winner = True
+                if winner == False:
+                    print('entrou')
+                    for player in self.playersPlayingRound:
+                        if player.betAmmount % 2 == 0:
+                            print(int((player.betAmmount)/2))
+                            self.roulette.bank += int((player.betAmmount)/2)
+                            player.pot += int((player.betAmmount)/2)
+                else:
+                    self.redistributeMoney()
+        else:
+            self.redistributeMoney()
 
     def displayResults(self):
         print('\n------------------------------------------------')
